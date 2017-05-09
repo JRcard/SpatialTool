@@ -50,3 +50,4 @@ class Audio():
         redAmp = REDAMPLIST[i]
         redAmp.value = math.sqrt(amp)
 
+

@@ -51,12 +51,18 @@ class MyFrame(wx.Frame):
                                        pos=(10,175))
         self.radiusSlider = PyoGuiControlSlider(self.panel, 2, 25, 25, pos=(35,200), size=(35,225), orient=wx.VERTICAL)
         
+        self.ampSliderText = wx.StaticText(self.panel, id=-1, label="Master Volume",
+                                       pos=(13,435))
+        self.ampSlider = PyoGuiControlSlider(self.panel, 0, 2, 1, pos=(35,460), size=(35,225), orient=wx.VERTICAL)
+        
         self.radiusSliderText.SetForegroundColour(COLOR_AR)
         self.onOffText.SetForegroundColour(COLOR_AR)
         self.chooseSndText.SetForegroundColour(COLOR_AR)
+        self.ampSliderText.SetForegroundColour(COLOR_AR)
 
         # BINDS
         self.radiusSlider.Bind(EVT_PYO_GUI_CONTROL_SLIDER, self.radiusZone)
+        self.ampSlider.Bind(EVT_PYO_GUI_CONTROL_SLIDER, self.masterAmp)
         self.Bind(wx.EVT_CLOSE, self.quit)
         self.onOff.Bind(wx.EVT_TOGGLEBUTTON, self.startServ)
         self.chooseSnd.Bind(wx.EVT_BUTTON, self.loadSnd)
@@ -124,3 +130,8 @@ class MyFrame(wx.Frame):
             speakers[i].setZoneRad(x)
         self.surface.Refresh()
             
+    def masterAmp(self,e):
+        x = e.value
+        audio = vars.getVars("Audio")
+        audio.player.mul = x
+        

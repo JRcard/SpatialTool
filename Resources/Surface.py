@@ -21,7 +21,7 @@ class Surface(wx.Panel):
         self.catchSpeaker = False
         self.shift = False
         self.alt = False
-        
+        self.s = False
 
         # Creation des cercles/sources
         self.blueCircle = Source(100, 100, CIRCLE_RADIUS) 
@@ -47,10 +47,11 @@ class Surface(wx.Panel):
         vars.setVars("Speakers", speakers)
         
         # méthode pour les controles
-        self.Bind(wx.EVT_PAINT, self.OnPaint)
-        self.Bind(wx.EVT_LEFT_DOWN, self.OnMouseDown)
-        self.Bind(wx.EVT_LEFT_UP, self.OnMouseUp)
-        self.Bind(wx.EVT_MOTION, self.OnMotion)
+        self.Bind(wx.EVT_PAINT, self.onPaint)
+        self.Bind(wx.EVT_LEFT_DOWN, self.onLeftDown)
+        self.Bind(wx.EVT_LEFT_UP, self.onLeftUp)
+        self.Bind(wx.EVT_RIGHT_DOWN, self.onRightDown)
+        self.Bind(wx.EVT_MOTION, self.onMotion)
         
         self.Bind(wx.EVT_KEY_DOWN, self.onKeyDown)
         self.Bind(wx.EVT_KEY_UP, self.onKeyUp)
@@ -62,6 +63,8 @@ class Surface(wx.Panel):
             self.shift = True
         if key == 307:
             self.alt = True
+        if key == 83:
+            self.s = True
         
     def onKeyUp(self,e):
         key = e.GetKeyCode()
@@ -70,14 +73,14 @@ class Surface(wx.Panel):
             self.shift = False
         elif key == 307 and self.alt:
             self.alt = False
-
+        elif key == 83 and self.s:
+            self.s = False
         
-    def OnMouseDown(self, e):
+    def onLeftDown(self, e):
         self.CaptureMouse()
         self.pos = self.clip(e.GetPosition())
         
         self.onCircle(self.pos[0],self.pos[1])
-        self.onSpeaker(self.pos)
         
         if self.alt and self.shift:
             self.catch = True
@@ -102,16 +105,21 @@ class Surface(wx.Panel):
             self.currentCircle.x = self.pos[0]
             self.currentCircle.y = self.pos[1]
             self.distance(self.pos)
-
+            
+        elif self.s:
+            self.onSpeaker(self.pos)
+            
         elif self.catch:
             print "catch!"
-            
-        elif self.onSpeaker(self.pos):
-            print "YESS"
 
         self.Refresh()
 
-    def OnMotion(self, e):
+    def onRightDown(self,e):
+        self.pos = self.clip(e.GetPosition())
+        self.initSpkPos(self.pos)
+        self.Refresh()
+        
+    def onMotion(self, e):
         if self.HasCapture():
 
             self.pos = self.clip(e.GetPosition())
@@ -136,13 +144,13 @@ class Surface(wx.Panel):
 
             self.Refresh()
 
-    def OnMouseUp(self, e):
+    def onLeftUp(self, e):
 
         if self.HasCapture():
 
             self.ReleaseMouse()
 
-            if self.catch:
+            if self.catch or self.catchSpeaker:
                 self.isAList = False
                 self.catch = False
                 self.catchSpeaker = False
@@ -154,7 +162,7 @@ class Surface(wx.Panel):
             
             self.Refresh()
 
-    def OnPaint(self, e):
+    def onPaint(self, e):
         w,h = self.GetSize()
 
         dc = wx.AutoBufferedPaintDC(self)
@@ -221,7 +229,21 @@ class Surface(wx.Panel):
             else:
                 self.currentSpeaker = None
                 self.catchSpeaker = False
-
+                
+    def spkInMotion(self,pos):
+        pass
+        
+    def initSpkPos(self,pos):
+        initPos = vars.getVars("Speakers_setup")
+        spk = vars.getVars("Speakers")
+        for i in spk:
+            if i.isInside(pos):
+                self.currentSpeaker = i
+                spkIndex = spk.index(i)
+                self.currentSpeaker.x = initPos[spkIndex][0]
+                self.currentSpeaker.y = initPos[spkIndex][1]
+                break
+        
 
     def clip(self,pos):
         w,h = self.GetSize()

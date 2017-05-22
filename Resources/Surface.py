@@ -279,9 +279,8 @@ class Surface(wx.Panel):
             elif self.currentCircle == self.redCircle:
                 self.audio.setRedAmp(i,amp)
         
-
+    
 ### formule pour la distance entre 2 points. pour calculer la distance 
 ### entre le centre du cercle et le coin sup.Gauche du speaker: 
     ### pour A(x1,y1) et B(x2,y2)
 ### d(A,B) = math.sqrt(math.pow((x2-x1),2) + math.pow((y2-y1),2))
-

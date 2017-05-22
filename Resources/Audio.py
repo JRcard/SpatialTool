@@ -2,15 +2,20 @@
 import math
 from Constants import *
 from pyo import *
-
+import Variables as vars
 
 savefile([[0,0,0,0],[0,0,0,0]], EMPTY_AUDIO_FILE, channels=2)
 
+# START JR 20 mai
+server = Server(sr=44100, nchnls=NCHNLS, buffersize=512).boot()
+server.start()
+
+# END JR
 
 class Audio():
     def __init__(self):
 
-        self.server = Server(sr=44100, nchnls=NCHNLS, buffersize=512).boot()
+#        self.server = Server(sr=44100, nchnls=NCHNLS, buffersize=512).boot()  #JR 20 mai
 
         # Player et canaux individuelles.
         self.player = SfPlayer(EMPTY_AUDIO_FILE, speed=1, loop=False, offset=0, interp=2, mul=1, add=0)
@@ -49,5 +54,3 @@ class Audio():
     def setRedAmp(self,i,amp):
         redAmp = REDAMPLIST[i]
         redAmp.value = math.sqrt(amp)
-
-

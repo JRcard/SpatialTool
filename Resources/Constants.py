@@ -5,13 +5,13 @@ import os, math
 BLUEAMPLIST = []
 REDAMPLIST = []
 
-NCHNLS = 2
+NCHNLS = 8
 
 CIRCLE_RADIUS = 10
 SPEAKER_RADIUS = 15
 
-NUM_SPEAKERS = 4
-TYPE = "B"
+NUM_SPEAKERS = 8
+TYPE = "A"
 
 SETUP_STEREO = [(100, 100), (500, 100)]
 SETUP_QUAD = [(100, 100), (500, 100), (500,500), (100, 500)]
@@ -47,4 +47,5 @@ if not os.path.isdir(TEMP_PATH):
 EMPTY_AUDIO_FILE = os.path.join(TEMP_PATH, "radio_tempfile.wav")
 TESTFILE = '/Users/Jrcard/Google Drive/Jeremie_Ricard_Darkest_Fear.wav'
 
-
+# OCS Port
+PORT = 9900

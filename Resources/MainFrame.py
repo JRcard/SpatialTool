@@ -8,6 +8,16 @@ from Constants import *
 import Variables as vars
 from Audio import server # JR 20 mai
 
+#*************************************************************************************
+#  22/05/2017 - Francis Lecavalier
+#  Conversion des valeurs du AmpSlider en dB et ajout de fonctions à cet effet.
+#
+#  À corriger: Les sons commencent à jouer lorsque l'on démarre le serveur audio,
+#  même lorsque l'on appuie sur "Play". D'ailleurs le bouton "Audio Server" est-il
+#  vraiment utile? Il devrait peut-être seulement y avoir un bouton "Play/Stop",
+#  "Pause" et un bouton "Mute". J'ai l'impression que le bouton "Audio Server"
+#  porte à confusion.
+#*************************************************************************************
 
 class MyFrame(wx.Frame):
     def __init__(self, parent=None, title="SpatialTool", pos=(100,100),
@@ -52,9 +62,14 @@ class MyFrame(wx.Frame):
                                        pos=(10,175))
         self.radiusSlider = PyoGuiControlSlider(self.panel, 2, 25, 25, pos=(35,200), size=(35,225), orient=wx.VERTICAL)
         
-        self.ampSliderText = wx.StaticText(self.panel, id=-1, label="Master Volume",
+        # FL -START 22/05/17
+        self.ampSliderText = wx.StaticText(self.panel, id=-1, label="Master Volume (dB)",
                                        pos=(13,435))
-        self.ampSlider = PyoGuiControlSlider(self.panel, 0, 2, 1, pos=(35,460), size=(35,225), orient=wx.VERTICAL)
+#        self.ampSliderText = wx.StaticText(self.panel, id=-1, label="Master Volume",
+#                                       pos=(13,435))
+        self.ampSlider = PyoGuiControlSlider(self.panel, -18, 9, self.convertTodB(1), pos=(35,460), size=(35,225), orient=wx.VERTICAL)
+#        self.ampSlider = PyoGuiControlSlider(self.panel, 0, 2, 1, pos=(35,460), size=(35,225), orient=wx.VERTICAL)
+        # FL - END 22/05/17
         
 #        self.onOffText.SetForegroundColour(COLOR_AR) # JR 20 mai
         self.radiusSliderText.SetForegroundColour(COLOR_AR)
@@ -68,6 +83,7 @@ class MyFrame(wx.Frame):
         self.Bind(wx.EVT_CLOSE, self.quit)
         self.chooseSnd.Bind(wx.EVT_BUTTON, self.loadSnd)
         self.playStop.Bind(wx.EVT_TOGGLEBUTTON, self.playSnd)
+        self.ampSlider.Bind(wx.EVT_LEFT_DCLICK, self.ampSliderReset) #FL 22/05/2017
         
         # VuMeter                       
         self.meter = PyoGuiVuMeter(parent=self.panel,
@@ -136,5 +152,23 @@ class MyFrame(wx.Frame):
     def masterAmp(self,e):
         x = e.value
         audio = vars.getVars("Audio")
-        audio.player.mul = x
+        audio.player.mul = self.convertToMul(x) #FL 22/05/17
+#        audio.player.mul = x   FL 22/05/17
+        
+    # FL - START 22/05/17
+    def convertTodB(self, floatValue):
+        try:
+            return math.log10(floatValue) * 10
+        except ValueError:
+            return -120.0
+            
+    def convertToMul(self, floatValue):
+        return pow(10, (floatValue/10))
+        
+    def ampSliderReset(self, e):
+        e.GetEventObject().SetValue(0.0)
+        audio = vars.getVars("Audio")
+        audio.player.mul = 1.0
+        self.Refresh()
+    # FL - END 22/05/17
         

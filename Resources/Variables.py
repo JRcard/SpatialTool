@@ -1,5 +1,5 @@
 # encoding: utf-8
-
+#JR Start 
 
 # Dictionnaire qui enregistre les references des differents objets
 # du programme. Cela permet un acces simple et efficace a n'importe
@@ -8,6 +8,7 @@ vars = {}
 vars["Surface"] = None
 vars["Audio"] = None
 vars["MainFrame"] = None
+vars["OSCServer"] = None
 vars["Speakers"] = []
 vars["Speakers_setup"] = [] # [(x, y), (x, y), ...]
 
@@ -16,5 +17,9 @@ def setVars(key, obj):
     vars[key] = obj
     
 # Recupere une reference dans le dictionnaire.
+#def getVars(key):
+#    return vars.get(key, None)
 def getVars(key):
     return vars.get(key, None)
+    
+#JR END

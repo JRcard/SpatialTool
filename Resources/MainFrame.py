@@ -6,6 +6,7 @@ from pyo import *
 from Surface import Surface
 from Constants import *
 import Variables as vars
+from Audio import server # JR 20 mai
 
 
 class MyFrame(wx.Frame):
@@ -33,11 +34,11 @@ class MyFrame(wx.Frame):
        
 ##### BOUTONS et GRAPHIQUES ##### 
 
-
-        self.onOffText = wx.StaticText(self.panel, id=-1, label="Audio Server",
-                                       pos=(17,10))
-        self.onOff = wx.ToggleButton(self.panel, id=-1, label="On", 
-                                     pos=(10,30))
+# JR 20 mai
+#        self.onOffText = wx.StaticText(self.panel, id=-1, label="Audio Server",
+#                                       pos=(17,10))
+#        self.onOff = wx.ToggleButton(self.panel, id=-1, label="On", 
+#                                     pos=(10,30))
 
         self.chooseSndText = wx.StaticText(self.panel, id=-1, label="Choose file",
                                        pos=(20,80))
@@ -55,16 +56,16 @@ class MyFrame(wx.Frame):
                                        pos=(13,435))
         self.ampSlider = PyoGuiControlSlider(self.panel, 0, 2, 1, pos=(35,460), size=(35,225), orient=wx.VERTICAL)
         
+#        self.onOffText.SetForegroundColour(COLOR_AR) # JR 20 mai
         self.radiusSliderText.SetForegroundColour(COLOR_AR)
-        self.onOffText.SetForegroundColour(COLOR_AR)
         self.chooseSndText.SetForegroundColour(COLOR_AR)
         self.ampSliderText.SetForegroundColour(COLOR_AR)
 
         # BINDS
+#        self.onOff.Bind(wx.EVT_TOGGLEBUTTON, self.startServ) # JR 20 mai
         self.radiusSlider.Bind(EVT_PYO_GUI_CONTROL_SLIDER, self.radiusZone)
         self.ampSlider.Bind(EVT_PYO_GUI_CONTROL_SLIDER, self.masterAmp)
         self.Bind(wx.EVT_CLOSE, self.quit)
-        self.onOff.Bind(wx.EVT_TOGGLEBUTTON, self.startServ)
         self.chooseSnd.Bind(wx.EVT_BUTTON, self.loadSnd)
         self.playStop.Bind(wx.EVT_TOGGLEBUTTON, self.playSnd)
         
@@ -80,18 +81,19 @@ class MyFrame(wx.Frame):
 
         # cree un objet Surface pour le controle des parametres
         self.surface = Surface(self.panel, pos=(150,60), size=(GRID_WIDTH,GRID_HEIGHT))
+        vars.setVars("Surface", self.surface) #JR 20 mai
 
-
-##### METHODES #####        
-    def startServ(self,e):
-        if e.GetInt() == 1:
-            if self.onOff.GetLabel() == "On":
-                self.onOff.SetLabel("Off")
-            
-            self.audio.server.start()
-        else:
-            self.onOff.SetLabel("On")
-            self.audio.server.stop()
+##### METHODES #####
+# JR 20 mai        
+#    def startServ(self,e):
+#        if e.GetInt() == 1:
+#            if self.onOff.GetLabel() == "On":
+#                self.onOff.SetLabel("Off")
+#            
+#            self.audio.server.start()
+#        else:
+#            self.onOff.SetLabel("On")
+#            self.audio.server.stop()
 
     def playSnd(self,e):
         if e.GetInt() == 1:
@@ -118,8 +120,9 @@ class MyFrame(wx.Frame):
     def quit(self,e):
         if os.path.isfile(EMPTY_AUDIO_FILE):
             os.remove(EMPTY_AUDIO_FILE)
-        audio = vars.getVars("Audio")
-        audio.server.stop()
+#        audio = vars.getVars("Audio")
+#        audio.server.stop()
+        server.stop() #JR 20 mai
         print "Cleaning up..."
         self.Destroy()
 

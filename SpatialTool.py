@@ -6,10 +6,16 @@ from Resources.MainFrame import *
 from Resources.Audio import Audio
 from Resources.OSCServer import * #JR 21 mai
 import Resources.Variables as vars
+from Resources.Pref import * # JR 22 mai
 
 class MyApp(wx.App):
     
     def OnInit(self):
+#        dlg = PrefDlg()
+#        dlg.Show()
+#        if dlg.isOk():
+#            dlg.setPref()
+#            dlg.Destroy()
         audio = Audio()
         vars.setVars("Audio", audio)
         oscServer = OSCServer()   #JR 21 mai

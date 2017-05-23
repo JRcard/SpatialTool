@@ -11,7 +11,7 @@ vars["MainFrame"] = None
 vars["OSCServer"] = None
 vars["Speakers"] = []
 vars["Speakers_setup"] = [] # [(x, y), (x, y), ...]
-
+vars["Pref"] = {"NCHNLS": "","NUM_SPEAKERS": "", "OSCPORT": ""}
 # Enregistre une reference dans le dictionnaire.
 def setVars(key, obj):
     vars[key] = obj

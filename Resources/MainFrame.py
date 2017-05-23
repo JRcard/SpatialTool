@@ -12,11 +12,9 @@ from Audio import server # JR 20 mai
 #  22/05/2017 - Francis Lecavalier
 #  Conversion des valeurs du AmpSlider en dB et ajout de fonctions à cet effet.
 #
-#  À corriger: Les sons commencent à jouer lorsque l'on démarre le serveur audio,
-#  même lorsque l'on appuie sur "Play". D'ailleurs le bouton "Audio Server" est-il
-#  vraiment utile? Il devrait peut-être seulement y avoir un bouton "Play/Stop",
-#  "Pause" et un bouton "Mute". J'ai l'impression que le bouton "Audio Server"
-#  porte à confusion.
+#  23/05/2017 - Francis Lecavalier
+#  Ajout d'un try/catch et d'un raise pour éviter les segs faults qui surviennet 
+#  parfois lorsque l'on quitte l'application. Ne semble pas toujours fonctionner...
 #*************************************************************************************
 
 class MyFrame(wx.Frame):
@@ -140,7 +138,13 @@ class MyFrame(wx.Frame):
 #        audio.server.stop()
         server.stop() #JR 20 mai
         print "Cleaning up..."
-        self.Destroy()
+        # FL - START 22/05/17 
+        try:
+            self.Destroy()
+        except:
+            pass
+        raise SystemExit
+        # FL - END 22/05/17
 
     def radiusZone(self,e):
         x = e.value

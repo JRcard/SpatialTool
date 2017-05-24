@@ -17,9 +17,8 @@ import Variables as vars
 # JR START 21 mai    
 def function5(data):
 #    print "PadL: " + str(data)
-    surface = vars.getVars("Surface")
-    surface.blueCircle.x = int(data)
-    surface.Refresh()
+        surface = vars.getVars("Surface")
+        surface.OSCMove(0, x=data)
     
     
 # JR END 21 mai

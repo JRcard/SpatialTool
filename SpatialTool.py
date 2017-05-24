@@ -11,11 +11,14 @@ from Resources.Pref import * # JR 22 mai
 class MyApp(wx.App):
     
     def OnInit(self):
-#        dlg = PrefDlg()
-#        dlg.Show()
-#        if dlg.isOk():
-#            dlg.setPref()
-#            dlg.Destroy()
+        # Start JR 23 mai 2017
+        dlg = PrefDlg()
+        if dlg.ShowModal() == wx.ID_OK:
+            dlg.Destroy()
+        else:
+            dlg.Destroy()
+        # End JR 23 mai 2017
+
         audio = Audio()
         vars.setVars("Audio", audio)
         oscServer = OSCServer()   #JR 21 mai
@@ -25,11 +28,8 @@ class MyApp(wx.App):
         self.SetTopWindow(frame)
         frame.Show()
         return True
-        
+
 
 if __name__ == "__main__":
     app = MyApp(False)
     app.MainLoop()
-    
-
-# SO FUN!

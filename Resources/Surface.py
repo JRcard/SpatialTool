@@ -31,7 +31,7 @@ class Surface(wx.Panel):
         self.shift = False
         self.alt = False
         self.s = False
-        
+
         # FL START 23/05/2017
         #OSC Variables
         self.incs = [0, 0, 0, 0]
@@ -40,25 +40,29 @@ class Surface(wx.Panel):
         # Creation des cercles/sources
         self.blueCircle = Source(100, 100, CIRCLE_RADIUS) 
         self.redCircle = Source(500, 100, CIRCLE_RADIUS)
- 
+
+# START JR 25 mai2017
         # création des speakers
-        if NUM_SPEAKERS == 2:
-            vars.setVars("Speakers_setup", SETUP_STEREO)
-        elif NUM_SPEAKERS == 4:
-            vars.setVars("Speakers_setup", SETUP_QUAD)
-        elif NUM_SPEAKERS == 8 and TYPE == "A":
-            vars.setVars("Speakers_setup", SETUP_OCTO_DIAMAND)
-        elif NUM_SPEAKERS == 8 and TYPE == "B":
-            vars.setVars("Speakers_setup", SETUP_OCTO_STEREO)
-        else:
-            pass
+#        if NUM_SPEAKERS == 2:
+#            vars.setVars("Speakers_setup", SETUP_STEREO)
+#        elif NUM_SPEAKERS == 4:
+#            vars.setVars("Speakers_setup", SETUP_QUAD)
+#        elif NUM_SPEAKERS == 8 and TYPE == "A":
+#            vars.setVars("Speakers_setup", SETUP_OCTO_DIAMAND)
+#        elif NUM_SPEAKERS == 8 and TYPE == "B":
+#            vars.setVars("Speakers_setup", SETUP_OCTO_STEREO)
+#        else:
+#            pass
 
         speakers = []
-        for i in range(NUM_SPEAKERS):
-            setup = vars.getVars("Speakers_setup")
+        setup = vars.getVars("Speakers_setup")
+        pref = vars.getVars("Pref") # JR 25 mai 2017
+        numSpk = pref["NUM_SPEAKERS"]
+        for i in range(numSpk):
             x, y = setup[i][0], setup[i][1]
             speakers.append(Speaker(x, y, SPEAKER_RADIUS))
         vars.setVars("Speakers", speakers)
+# END JR 25 mai 2017
         
         # méthode pour les controles
         self.Bind(wx.EVT_PAINT, self.onPaint)
@@ -197,7 +201,9 @@ class Surface(wx.Panel):
         for i in range(8):
             dc.DrawCircle(300,300,CIRCLE_RADIUS*(7*i))
 
-        for i in range(NUM_SPEAKERS):
+        pref = vars.getVars("Pref") # JR 25 mai 2017
+        numSpk = pref["NUM_SPEAKERS"]
+        for i in range(numSpk):
             vars.getVars("Speakers")[i].draw(dc, COLOR_AV)
             vars.getVars("Speakers")[i].drawZone(dc, COLOR_AV)
 
@@ -278,7 +284,9 @@ class Surface(wx.Panel):
     ##### p-e remplacer la diagonal ds l'équation.... a voir.
 
     def distance(self,pos):
-        for i in range(NUM_SPEAKERS):
+        pref = vars.getVars("Pref") # JR 25 mai 2017
+        numSpk = pref["NUM_SPEAKERS"]        
+        for i in range(numSpk):
             SpkPos = vars.getVars("Speakers")[i].getCenter()
             SpkRad = vars.getVars("Speakers")[i].getZoneRad()
             dist = math.sqrt(math.pow((pos[0]-SpkPos[0]),2) + math.pow((pos[1]-SpkPos[1]),2))

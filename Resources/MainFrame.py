@@ -6,7 +6,7 @@ from pyo import *
 from Surface import Surface
 from Constants import *
 import Variables as vars
-from Audio import server # JR 20 mai
+#from Audio import server # JR 20 mai
 
 #*************************************************************************************
 #  22/05/2017 - Francis Lecavalier
@@ -84,8 +84,10 @@ class MyFrame(wx.Frame):
         self.ampSlider.Bind(wx.EVT_LEFT_DCLICK, self.ampSliderReset) #FL 22/05/2017
         
         # VuMeter                       
+        pref = vars.getVars("Pref") # JR 25 mai 2017
+        numSpk = pref["NUM_SPEAKERS"]
         self.meter = PyoGuiVuMeter(parent=self.panel,
-                                   nchnls=NUM_SPEAKERS,
+                                   nchnls=numSpk, # NUM_SPEAKERS JR 25 mai 2017
                                    pos=(150, 10),
                                    size=(600, 30),
                                    orient=wx.HORIZONTAL,
@@ -134,9 +136,9 @@ class MyFrame(wx.Frame):
     def quit(self,e):
         if os.path.isfile(EMPTY_AUDIO_FILE):
             os.remove(EMPTY_AUDIO_FILE)
-#        audio = vars.getVars("Audio")
-#        audio.server.stop()
-        server.stop() #JR 20 mai
+        audio = vars.getVars("Audio")
+        audio.server.stop()
+#        server.stop() #JR 20 mai
         print "Cleaning up..."
         # FL - START 22/05/17 
         try:

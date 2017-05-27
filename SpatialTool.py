@@ -13,21 +13,30 @@ class MyApp(wx.App):
     def OnInit(self):
         # Start JR 23 mai 2017
         dlg = PrefDlg()
+        dlg.CenterOnScreen() # FL 26/05/2017
         if dlg.ShowModal() == wx.ID_OK:
-            dlg.Destroy()
+            # FL START 26/05/17
+            dlg.commitPrefs()
+            audio = Audio()
+            vars.setVars("Audio", audio)
+            oscServer = OSCServer()   #JR 21 mai
+            vars.setVars("OSCServer", oscServer)   # JR 21 mai
+            frame = MyFrame()
+            vars.setVars("MainFrame", frame)
+            self.SetTopWindow(frame)
+            frame.Show()
+            return True
+#            dlg.Destroy()
+            # FL END 26/05/17
         else:
-            dlg.Destroy()
+            try: #FL 26/05/17
+                dlg.Destroy()
+            except: #FL 26/05/17
+                pass #FL 26/05/17
+        raise SystemExit #FL 26/05/17
         # End JR 23 mai 2017
 
-        audio = Audio()
-        vars.setVars("Audio", audio)
-        oscServer = OSCServer()   #JR 21 mai
-        vars.setVars("OSCServer", oscServer)   # JR 21 mai
-        frame = MyFrame()
-        vars.setVars("MainFrame", frame)
-        self.SetTopWindow(frame)
-        frame.Show()
-        return True
+        
 
 
 if __name__ == "__main__":

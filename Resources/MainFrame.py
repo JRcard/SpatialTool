@@ -139,7 +139,7 @@ class MyFrame(wx.Frame):
         audio = vars.getVars("Audio")
         audio.server.stop()
 #        server.stop() #JR 20 mai
-        print "Cleaning up..."
+#        print "Cleaning up..." FL 26/05/17
         # FL - START 22/05/17 
         try:
             self.Destroy()
@@ -148,9 +148,13 @@ class MyFrame(wx.Frame):
         raise SystemExit
         # FL - END 22/05/17
 
+    # FL 26/05/17 
+    # Le problème des zones de Speakers commence ici... je n'arrive pas à trouver où et quand est défini "Speakers", défini dans le fichier 
+    # "Variables". Le problème part peut-être de là? As-tu supprimé par erreur l'initialisation de cette variable?
     def radiusZone(self,e):
         x = e.value
         speakers = vars.getVars("Speakers")
+        print str(len(speakers))
         for i in range(len(speakers)):
             speakers[i].setZoneRad(x)
         self.surface.Refresh()

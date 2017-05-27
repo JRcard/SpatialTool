@@ -14,19 +14,10 @@ import Variables as vars
 # FL 22/05/2017 
 # J'ai supprimé les fonctions bidons puisqu'ils n'étaient là que pour l'exemple
 
-# JR START 21 mai    
-def function5(data):
-#    print "PadL: " + str(data)
-        surface = vars.getVars("Surface")
-        surface.OSCMove(0, x=data)
-    
-    
-# JR END 21 mai
-
 class OSCServer:
     def __init__(self):
         #Dictionnaire avec fonctions associées à chaque message OSC reçu.
-        self.bindings = {"/stickL/x": self.stickLeftXMove, "/stickL/y": self.stickLeftYMove, "/stickR/x": self.stickRightXMove, "/stickR/y": self.stickRightYMove, "/padL": function5} # FL 22/05/17
+        self.bindings = {"/stickL/x": self.stickLeftXMove, "/stickL/y": self.stickLeftYMove, "/stickR/x": self.stickRightXMove, "/stickR/y": self.stickRightYMove, "/keyL1": self.onKeyL1} # FL 22/05/17
         #Objet OscListener de Pyo permet de gérer l'OSC dans un thread indépendant de l'audio. On peut donc gérer l'OSC même si le moteur audio n'est pas démarré
         self.listen = OscListener(self._oscrecv, 5555)
         self.listen.start()
@@ -60,8 +51,7 @@ class OSCServer:
         surface = vars.getVars("Surface")
         surface.OSCMove(1, y=data)
     #FL END 22/05/17
-         
-# JR 21 mai        
-#s = Server().boot()
-#osc = OSCServer()
-#s.gui(locals())
+    
+    #JR 27 mai 2017
+    def onKeyL1(self, data):
+        print str(data)

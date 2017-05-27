@@ -45,13 +45,16 @@ COLOR_MAIN = "#222222"
 
 
 # Dossier appartenant au programme. 
-TEMP_PATH = os.path.join(os.path.expanduser("~"), ".radio")
+TEMP_PATH = os.path.join(os.path.expanduser("~"), ".Spatial")
 
 # s'il n'existe pas on le cree
 if not os.path.isdir(TEMP_PATH):
     os.mkdir(TEMP_PATH)
 
 # Fichier audio contenant du silence
-EMPTY_AUDIO_FILE = os.path.join(TEMP_PATH, "radio_tempfile.wav")
+EMPTY_AUDIO_FILE = os.path.join(TEMP_PATH, "Spatial_temp.wav")
+# Fichier musical
 TESTFILE = '/Users/Jrcard/Google Drive/Jeremie_Ricard_Darkest_Fear.wav'
+# Préférences
+PREFERENCES = os.path.join(TEMP_PATH, "Preferences.txt")
 

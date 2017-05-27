@@ -104,4 +104,20 @@ class PrefDlg(wx.Dialog):
         self.setOSC()
     # FL END 26/05/17
         
+# ***********************************
+# JR 27 mai 2017
+# Je met ces fonctions ici pour le moment, ne sachant pas encore leur place optimum...
+
+    def onSave(self,e):
+            f = open(PREFERENCES, "w")
+            print f
+            f.write(str(pref))
+            f.close()
+
+    def onOpen(self,e):
+            f = open(PREFERENCES, "r")
+            pref = f.read()
+            print pref
+            f.close()  
+
             

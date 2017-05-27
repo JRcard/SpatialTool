@@ -16,7 +16,6 @@ class Audio():
         pref = vars.getVars("Pref")
         self.server = Server(sr=44100, nchnls=int(pref["NCHNLS"]), buffersize=512).boot()
         self.server.start()
-        print pref
         # END JR
         
         # Player et canaux individuelles.
@@ -25,7 +24,6 @@ class Audio():
         self.right = Sig(self.player[1])
 
         # Liste d'amplitude pour chaque canal d'entré relatif au nombre de canaux de sortie.
-        pref = vars.getVars("Pref") # JR 25 mai 2017
         numSpk = pref["NUM_SPEAKERS"]
         for i in range(numSpk):
             blueAmp = SigTo(value=0.0, time=0.1) # l'ajout d'un controle sur le Time serait bien

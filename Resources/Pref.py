@@ -108,13 +108,13 @@ class PrefDlg(wx.Dialog):
 # JR 27 mai 2017
 # Je met ces fonctions ici pour le moment, ne sachant pas encore leur place optimum...
 
-    def onSave(self,e):
+    def onSave(self):
             f = open(PREFERENCES, "w")
             print f
             f.write(str(pref))
             f.close()
 
-    def onOpen(self,e):
+    def onOpen(self):
             f = open(PREFERENCES, "r")
             pref = f.read()
             print pref

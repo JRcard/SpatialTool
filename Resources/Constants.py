@@ -17,7 +17,8 @@ SPEAKER_RADIUS = 15
 #TYPE = "A" 
 
 # Liste pour le l'utilisateur
-SPEAKERS_SETUP_LIST = ["", "Stereo", "Quad", "Octo-Left-Right", "Octo-Front-Back"] # JR 23 mai 2017
+SPEAKERS_SETUP_LIST = ["Stereo", "Quad", "Octo-Left-Right", "Octo-Front-Back"] # FL 26/05/17
+#SPEAKERS_SETUP_LIST = ["", "Stereo", "Quad", "Octo-Left-Right", "Octo-Front-Back"] # JR 23 mai 2017
 
 
 SETUP_STEREO = [(100, 100), (500, 100)]

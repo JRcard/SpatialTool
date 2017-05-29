@@ -9,13 +9,15 @@ savefile([[0,0,0,0],[0,0,0,0]], EMPTY_AUDIO_FILE, channels=2)
 
 
 class Audio():
-    def __init__(self):
+    def __init__(self, nchnls, numSpeakers): # FL 29/04/17
 
 #        self.server = Server(sr=44100, nchnls=NCHNLS, buffersize=512).boot()  #JR 20 mai
         # START JR 25 mai
-        pref = vars.getVars("Pref")
-        self.server = Server(sr=44100, nchnls=int(pref["NCHNLS"]), buffersize=512).boot()
-        self.server.start()
+        
+        self.nchnls = nchnls # FL 29/04/17
+        self.numSpeakers = numSpeakers # FL 29/04/17
+#        pref = vars.getVars("Pref") FL 29/05/17
+        self.server = Server(sr=44100, nchnls=self.nchnls, buffersize=512).boot()
         # END JR
         
         # Player et canaux individuelles.
@@ -24,8 +26,8 @@ class Audio():
         self.right = Sig(self.player[1])
 
         # Liste d'amplitude pour chaque canal d'entré relatif au nombre de canaux de sortie.
-        numSpk = pref["NUM_SPEAKERS"]
-        for i in range(numSpk):
+#        numSpk = pref["NUM_SPEAKERS"] FL 29/05/17
+        for i in range(self.numSpeakers): # FL 29/05/17
             blueAmp = SigTo(value=0.0, time=0.1) # l'ajout d'un controle sur le Time serait bien
             redAmp = SigTo(value=0.0, time=0.1)
             BLUEAMPLIST.append(blueAmp)
@@ -36,10 +38,11 @@ class Audio():
         self.setRedAmp(1,1)
         
         # OUTPUTS
-        self.outBlue = Mix(self.left, voices=numSpk, mul=BLUEAMPLIST).out()
-        self.outRed = Mix(self.right, voices=numSpk, mul=REDAMPLIST).out()
+        self.outBlue = Mix(self.left, voices=self.numSpeakers, mul=BLUEAMPLIST).out()
+        self.outRed = Mix(self.right, voices=self.numSpeakers, mul=REDAMPLIST).out()
 
         self.ampAnal = PeakAmp(self.outBlue+self.outRed)
+        self.server.start()
 
     def registerMeter(self, meter):
         self.ampAnal.setFunction(meter.setRms)

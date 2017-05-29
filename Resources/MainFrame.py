@@ -19,13 +19,14 @@ import Variables as vars
 
 class MyFrame(wx.Frame):
     def __init__(self, parent=None, title="SpatialTool", pos=(100,100),
-                 size=(800,700)):
+                 size=(800,700), numSpeakers=2):
         wx.Frame.__init__(self, parent, id=-1, title=title, pos=pos, size=size)
 
         self.panel = wx.Panel(self)
         self.panel.SetBackgroundColour(COLOR_MAIN)
         
         self.audio = vars.getVars("Audio")
+        self.numSpeakers = numSpeakers
 
 ##### MENU #####
         self.menu = wx.MenuBar()
@@ -84,10 +85,10 @@ class MyFrame(wx.Frame):
         self.ampSlider.Bind(wx.EVT_LEFT_DCLICK, self.ampSliderReset) #FL 22/05/2017
         
         # VuMeter                       
-        pref = vars.getVars("Pref") # JR 25 mai 2017
-        numSpk = pref["NUM_SPEAKERS"]
+#        pref = vars.getVars("Pref") # JR 25 mai 2017
+#        numSpk = pref["NUM_SPEAKERS"] FL 29/05/17
         self.meter = PyoGuiVuMeter(parent=self.panel,
-                                   nchnls=numSpk, # NUM_SPEAKERS JR 25 mai 2017
+                                   nchnls=self.numSpeakers, # NUM_SPEAKERS JR 25 mai 2017
                                    pos=(150, 10),
                                    size=(600, 30),
                                    orient=wx.HORIZONTAL,
@@ -96,7 +97,7 @@ class MyFrame(wx.Frame):
         self.audio.registerMeter(self.meter)
 
         # cree un objet Surface pour le controle des parametres
-        self.surface = Surface(self.panel, pos=(150,60), size=(GRID_WIDTH,GRID_HEIGHT))
+        self.surface = Surface(self.panel, pos=(150,60), size=(GRID_WIDTH,GRID_HEIGHT), numSpeakers=self.numSpeakers)
         vars.setVars("Surface", self.surface) #JR 20 mai
 
 ##### METHODES #####

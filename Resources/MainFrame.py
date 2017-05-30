@@ -35,10 +35,11 @@ class MyFrame(wx.Frame):
         
         # Put the "File" menu on the menu bar and put action in this menu           
         self.menu.Append(self.file, "&File")
-        self.menuExit = self.file.Append(wx.ID_EXIT, "E&xit", "Terminate the program")
+        self.menuExit = self.file.Append(wx.ID_EXIT, "&Exit", "Terminate the program")
         
 
-        self.Bind(wx.EVT_MENU, self.quit, self.menuExit)    
+        self.Bind(wx.EVT_MENU, self.quit, self.menuExit)   
+
         
        
 ##### BOUTONS et GRAPHIQUES ##### 
@@ -149,15 +150,12 @@ class MyFrame(wx.Frame):
         raise SystemExit
         # FL - END 22/05/17
 
-    # FL 26/05/17 
-    # Le problème des zones de Speakers commence ici... je n'arrive pas à trouver où et quand est défini "Speakers", défini dans le fichier 
-    # "Variables". Le problème part peut-être de là? As-tu supprimé par erreur l'initialisation de cette variable?
     def radiusZone(self,e):
         x = e.value
         speakers = vars.getVars("Speakers")
-        print str(len(speakers))
         for i in range(len(speakers)):
             speakers[i].setZoneRad(x)
+        self.surface.speakerAdjusted()
         self.surface.Refresh()
             
     def masterAmp(self,e):

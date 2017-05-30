@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # encoding: utf-8
 
 # Dictionnaire qui enregistre les references des differents objets
@@ -10,7 +11,7 @@ vars["MainFrame"] = None
 vars["OSCServer"] = None
 vars["Speakers"] = []
 vars["Speakers_setup"] = [] # [(x, y), (x, y), ...]
-vars["Pref"] = {"NCHNLS": "2","SPEAKERS_SETUP": 0, "NUM_SPEAKERS": 2, "OSCPORT": "5555"}
+vars["Pref"] = {"AUDIO_DRIVER": "None", "NCHNLS": "2","SPEAKERS_SETUP": 0, "NUM_SPEAKERS": 2, "OSCPORT": "5555"} # FL 29/05/17
 
 # Enregistre une reference dans le dictionnaire.
 def setVars(key, obj):

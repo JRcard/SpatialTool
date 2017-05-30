@@ -28,7 +28,7 @@ class Audio():
         # Liste d'amplitude pour chaque canal d'entré relatif au nombre de canaux de sortie.
 #        numSpk = pref["NUM_SPEAKERS"] FL 29/05/17
         for i in range(self.numSpeakers): # FL 29/05/17
-            blueAmp = SigTo(value=0.0, time=0.1) # l'ajout d'un controle sur le Time serait bien
+            blueAmp = SigTo(value=0.0, time=0.1) 
             redAmp = SigTo(value=0.0, time=0.1)
             BLUEAMPLIST.append(blueAmp)
             REDAMPLIST.append(redAmp)

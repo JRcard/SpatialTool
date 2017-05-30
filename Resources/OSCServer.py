@@ -2,7 +2,6 @@
 # encoding: utf-8
 from pyo import *
 import Variables as vars
-# Fonctions bidons pour fins de tests
 
 #*************************************************************************************
 # 22/05/2017 - Francis Lecavalier
@@ -10,9 +9,6 @@ import Variables as vars
 # Les boules et leurs positions seront modifiées dans le fichier "Surface.py", afin de compartimenter
 # davantage OSCServer.
 #*************************************************************************************
-
-# FL 22/05/2017 
-# J'ai supprimé les fonctions bidons puisqu'ils n'étaient là que pour l'exemple
 
 class OSCServer:
     def __init__(self):

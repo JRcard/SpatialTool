@@ -283,7 +283,6 @@ class Surface(wx.Panel):
 
 
 ##### for each spk, getZone() calculer la distance de ce radius:
-    ##### p-e remplacer la diagonal ds l'équation.... a voir.
 
     def distance(self,pos):
 #        pref = vars.getVars("Pref") # JR 25 mai 2017
@@ -421,7 +420,6 @@ class Surface(wx.Panel):
     # FL END 23/05/2017
         
     
-### formule pour la distance entre 2 points. pour calculer la distance 
-### entre le centre du cercle et le coin sup.Gauche du speaker: 
-    ### pour A(x1,y1) et B(x2,y2)
-### d(A,B) = math.sqrt(math.pow((x2-x1),2) + math.pow((y2-y1),2))
+# formule pour la distance entre 2 points. 
+# pour A(x1,y1) et B(x2,y2)
+# d(A,B) = math.sqrt(math.pow((x2-x1),2) + math.pow((y2-y1),2))

@@ -48,10 +48,6 @@ class PrefDlg(wx.Dialog):
         self.SetSizer(sizer)
         sizer.Fit(self)
 
-#    def setPref(self):
-#        global pref
-#        pref["NCHNLS"] = self.nchnlsText.GetValue()
-
     def onNchnls(self,e):
         pref["NCHNLS"] = int(self.nchnlsChoices.GetStringSelection())
         print pref
@@ -74,23 +70,6 @@ class PrefDlg(wx.Dialog):
         else:
             pass
         print pref
-#         def onNumSpk(self,e):
-#        pref["SPEAKERS_SETUP"] = self.numSpkChoices.GetSelection()
-#        if pref["SPEAKERS_SETUP"] == 1:
-#            vars.setVars("Speakers_setup", SETUP_STEREO)
-#            pref["NUM_SPEAKERS"] = len(SETUP_STEREO)
-#        elif pref["SPEAKERS_SETUP"] == 2:
-#            vars.setVars("Speakers_setup", SETUP_QUAD)
-#            pref["NUM_SPEAKERS"] = len(SETUP_QUAD)
-#        elif pref["SPEAKERS_SETUP"] == 3:
-#            vars.setVars("Speakers_setup", SETUP_OCTO_STEREO)
-#            pref["NUM_SPEAKERS"] = len(SETUP_OCTO_STEREO)
-#        elif pref["SPEAKERS_SETUP"] == 4:
-#            vars.setVars("Speakers_setup", SETUP_OCTO_DIAMAND)
-#            pref["NUM_SPEAKERS"] = len(SETUP_OCTO_DIAMAND)
-#        else:
-#            pass
-#        print pref
         # FL END 26/05/17
         
     def setOSC(self):
@@ -106,13 +85,6 @@ class PrefDlg(wx.Dialog):
         
 # ***********************************
 # JR 27 mai 2017
-# Je met ces fonctions ici pour le moment, ne sachant pas encore leur place optimum...
-
-    def onSave(self):
-            f = open(PREFERENCES, "w")
-            print f
-            f.write(str(pref))
-            f.close()
 
     def onOpen(self):
             f = open(PREFERENCES, "r")

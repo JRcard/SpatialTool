@@ -35,11 +35,13 @@ class MyFrame(wx.Frame):
         
         # Put the "File" menu on the menu bar and put action in this menu           
         self.menu.Append(self.file, "&File")
+        self.menuSave = self.file.Append(wx.ID_SAVE, "&Save\tCtrl+S", "Save preferences")
+        self.file.AppendSeparator()
         self.menuExit = self.file.Append(wx.ID_EXIT, "E&xit", "Terminate the program")
         
 
         self.Bind(wx.EVT_MENU, self.quit, self.menuExit)    
-        
+        self.Bind(wx.EVT_MENU, self.onSave, self.menuSave)
        
 ##### BOUTONS et GRAPHIQUES ##### 
 
@@ -64,10 +66,8 @@ class MyFrame(wx.Frame):
         # FL -START 22/05/17
         self.ampSliderText = wx.StaticText(self.panel, id=-1, label="Master Volume (dB)",
                                        pos=(13,435))
-#        self.ampSliderText = wx.StaticText(self.panel, id=-1, label="Master Volume",
-#                                       pos=(13,435))
+
         self.ampSlider = PyoGuiControlSlider(self.panel, -18, 9, self.convertTodB(1), pos=(35,460), size=(35,225), orient=wx.VERTICAL)
-#        self.ampSlider = PyoGuiControlSlider(self.panel, 0, 2, 1, pos=(35,460), size=(35,225), orient=wx.VERTICAL)
         # FL - END 22/05/17
         
 #        self.onOffText.SetForegroundColour(COLOR_AR) # JR 20 mai
@@ -101,16 +101,6 @@ class MyFrame(wx.Frame):
         vars.setVars("Surface", self.surface) #JR 20 mai
 
 ##### METHODES #####
-# JR 20 mai        
-#    def startServ(self,e):
-#        if e.GetInt() == 1:
-#            if self.onOff.GetLabel() == "On":
-#                self.onOff.SetLabel("Off")
-#            
-#            self.audio.server.start()
-#        else:
-#            self.onOff.SetLabel("On")
-#            self.audio.server.stop()
 
     def playSnd(self,e):
         if e.GetInt() == 1:
@@ -139,8 +129,6 @@ class MyFrame(wx.Frame):
             os.remove(EMPTY_AUDIO_FILE)
         audio = vars.getVars("Audio")
         audio.server.stop()
-#        server.stop() #JR 20 mai
-#        print "Cleaning up..." FL 26/05/17
         # FL - START 22/05/17 
         try:
             self.Destroy()
@@ -148,10 +136,14 @@ class MyFrame(wx.Frame):
             pass
         raise SystemExit
         # FL - END 22/05/17
+        
+    def onSave(self,e):
+        pref = vars.getVars("Pref")
+        f = open(PREFERENCES, "w")
+        print f
+        f.write(str(pref))
+        f.close()
 
-    # FL 26/05/17 
-    # Le problème des zones de Speakers commence ici... je n'arrive pas à trouver où et quand est défini "Speakers", défini dans le fichier 
-    # "Variables". Le problème part peut-être de là? As-tu supprimé par erreur l'initialisation de cette variable?
     def radiusZone(self,e):
         x = e.value
         speakers = vars.getVars("Speakers")

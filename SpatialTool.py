@@ -22,6 +22,7 @@ if __name__ == "__main__":
         vars.setVars("OSCServer", oscServer)
         frame = MyFrame(numSpeakers=pref["NUM_SPEAKERS"])
         vars.setVars("MainFrame", frame)
+        frame.Maximize()
         frame.Show()
         app.MainLoop()
     else:

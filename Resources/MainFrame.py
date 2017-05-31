@@ -6,7 +6,7 @@ from pyo import *
 from Surface import Surface
 from Constants import *
 import Variables as vars
-#from Audio import server # JR 20 mai
+
 
 #*************************************************************************************
 #  22/05/2017 - Francis Lecavalier
@@ -27,7 +27,18 @@ class MyFrame(wx.Frame):
         
         self.audio = vars.getVars("Audio")
         self.numSpeakers = numSpeakers
-
+        
+        # Start JR 31 mai 2017
+        frameSizer = wx.BoxSizer(wx.VERTICAL)
+        surfaceSizer = wx.BoxSizer(wx.VERTICAL)
+        buttonSizer = wx.BoxSizer(wx.VERTICAL)
+        radiusSizer = wx.BoxSizer(wx.VERTICAL)
+        volumeSizer = wx.BoxSizer(wx.VERTICAL)
+        controlSizer = wx.BoxSizer(wx.VERTICAL)
+        upSizer = wx.BoxSizer(wx.HORIZONTAL)
+        sndViewSizer = wx.BoxSizer(wx.HORIZONTAL)
+        # END JR 31 mai 2017
+        
 ##### MENU #####
         self.menu = wx.MenuBar()
         self.SetMenuBar(self.menu)
@@ -44,12 +55,6 @@ class MyFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.onSave, self.menuSave)
        
 ##### BOUTONS et GRAPHIQUES ##### 
-
-# JR 20 mai
-#        self.onOffText = wx.StaticText(self.panel, id=-1, label="Audio Server",
-#                                       pos=(17,10))
-#        self.onOff = wx.ToggleButton(self.panel, id=-1, label="On", 
-#                                     pos=(10,30))
 
         self.chooseSndText = wx.StaticText(self.panel, id=-1, label="Choose file",
                                        pos=(20,80))
@@ -85,21 +90,55 @@ class MyFrame(wx.Frame):
         self.ampSlider.Bind(wx.EVT_LEFT_DCLICK, self.ampSliderReset) #FL 22/05/2017
         
         # VuMeter                       
-#        pref = vars.getVars("Pref") # JR 25 mai 2017
-#        numSpk = pref["NUM_SPEAKERS"] FL 29/05/17
         self.meter = PyoGuiVuMeter(parent=self.panel,
-                                   nchnls=self.numSpeakers, # NUM_SPEAKERS JR 25 mai 2017
+                                   nchnls=self.numSpeakers, 
                                    pos=(150, 10),
                                    size=(600, 30),
-                                   orient=wx.HORIZONTAL,
+                                   orient=wx.VERTICAL,
                                    style=0)
 
         self.audio.registerMeter(self.meter)
-
+        
+        self.sndView = PyoGuiSndView(parent=self.panel,
+                                    pos=(150, 680),
+                                    size=(1200, 200),
+                                    style=0)
+                                    
+        self.sndView.setTable(self.audio.table)
+        
         # cree un objet Surface pour le controle des parametres
         self.surface = Surface(self.panel, pos=(150,60), size=(GRID_WIDTH,GRID_HEIGHT), numSpeakers=self.numSpeakers)
         vars.setVars("Surface", self.surface) #JR 20 mai
 
+##### SIZERS ######
+        # Start JR 31 mai 2017
+        surfaceSizer.Add(self.surface, 0, wx.ALL | wx.EXPAND, 5)
+        
+        radiusSizer.Add(self.radiusSliderText, 0, wx.ALL | wx.CENTER, 5)
+        radiusSizer.Add(self.radiusSlider, 0, wx.ALL | wx.wx.CENTER, 5)
+        volumeSizer.Add(self.ampSliderText, 0, wx.ALL | wx.CENTER, 5)
+        volumeSizer.Add(self.ampSlider, 0, wx.ALL | wx.CENTER, 5)
+        
+        buttonSizer.Add(self.chooseSndText, 0, wx.ALL | wx.CENTER, 5)
+        buttonSizer.Add(self.chooseSnd, 0, wx.ALL | wx.CENTER, 5)
+        buttonSizer.Add(self.playStop, 0, wx.ALL | wx.CENTER, 5)
+        
+        controlSizer.Add(buttonSizer, 0, wx.ALL | wx.CENTER, 5)
+        controlSizer.Add(radiusSizer, 0, wx.ALL | wx.CENTER, 5)
+        controlSizer.Add(volumeSizer, 0, wx.ALL | wx.CENTER, 5)
+        
+        upSizer.Add(controlSizer,0, wx.ALL | wx.EXPAND, 5)        
+        upSizer.Add(surfaceSizer, 0, wx.ALL | wx.EXPAND, 5)
+        upSizer.Add(self.meter, 0, wx.ALL | wx.EXPAND, 5)
+                
+        sndViewSizer.Add(self.sndView, 0, wx.LEFT | wx.EXPAND, 160)
+        
+        frameSizer.Add(upSizer, 0, wx.ALL, 5)
+        frameSizer.Add(sndViewSizer, 0, wx.CENTER | wx.EXPAND, 5)
+        
+        self.panel.SetSizerAndFit(frameSizer)
+        # Een JR 31 mai 2017
+        
 ##### METHODES #####
 
     def playSnd(self,e):
@@ -109,8 +148,8 @@ class MyFrame(wx.Frame):
                 self.audio.player.play()
         else:
             self.playStop.SetLabel("Play")
-            self.audio.player.stop()    
-
+            self.audio.player.stop()
+            
     def loadSnd(self,e):
         wildcard = "All files|*.*|" \
                "AIFF file|*.aif;*.aiff;*.aifc;*.AIF;*.AIFF;*.Aif;*.Aiff|" \
@@ -123,7 +162,7 @@ class MyFrame(wx.Frame):
                 self.chooseSnd.SetLabel("Ready")
                 self.audio.changeSnd(path)
         dlg.Destroy()        
-
+        
     def quit(self,e):
         if os.path.isfile(EMPTY_AUDIO_FILE):
             os.remove(EMPTY_AUDIO_FILE)

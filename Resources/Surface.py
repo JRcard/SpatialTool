@@ -42,29 +42,15 @@ class Surface(wx.Panel):
         self.blueCircle = Source(100, 100, CIRCLE_RADIUS) 
         self.redCircle = Source(500, 100, CIRCLE_RADIUS)
 
-# START JR 25 mai2017
-        # création des speakers
-#        if self.numSpeakers == 2:
-#            vars.setVars("Speakers_setup", SETUP_STEREO)
-#        elif self.numSpeakers == 4:
-#            vars.setVars("Speakers_setup", SETUP_QUAD)
-#        elif self.numSpeakers == 8 and TYPE == "A":
-#            vars.setVars("Speakers_setup", SETUP_OCTO_DIAMAND)
-#        elif self.numSpeakers == 8 and TYPE == "B":
-#            vars.setVars("Speakers_setup", SETUP_OCTO_STEREO)
-#        else:
-#            pass
-
+        # Création des speakers
         speakers = []
-#        pref = vars.getVars("Pref") # JR 25 mai 2017
-#        numSpk = pref["NUM_SPEAKERS"] FL 29/05/17
         for i in range(self.numSpeakers):
             setup = vars.getVars("Speakers_setup")
             x, y = setup[i][0], setup[i][1]
             speakers.append(Speaker(x, y, SPEAKER_RADIUS))
         vars.setVars("Speakers", speakers)
         print vars.getVars("Speakers")[0].c
-# END JR 25 mai 2017
+
         
         # méthode pour les controles
         self.Bind(wx.EVT_PAINT, self.onPaint)
@@ -222,7 +208,7 @@ class Surface(wx.Panel):
         # Les cercles
         self.blueCircle.draw(dc,COLOR_BLUE)
         self.redCircle.draw(dc,COLOR_RED)
-
+        
 
     def onCircle(self,x,y):
         if self.redCircle.isInside(x,y):

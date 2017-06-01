@@ -6,6 +6,7 @@ from pyo import *
 from Surface import Surface
 from Constants import *
 import Variables as vars
+from Waveform import *
 
 
 #*************************************************************************************
@@ -99,19 +100,23 @@ class MyFrame(wx.Frame):
 
         self.audio.registerMeter(self.meter)
         
-        self.sndView = PyoGuiSndView(parent=self.panel,
-                                    pos=(150, 680),
-                                    size=(1200, 200),
-                                    style=0)
-                                    
-        self.sndView.setTable(self.audio.table)
+        # START JR 31 mai 2017
+        self.sndView = Waveform(self.panel, self.audio.table).createSndTable()
+#        
+#        self.sndView = PyoGuiSndView(parent=self.panel,
+#                                    pos=(150, 680),
+#                                    size=(1200, 200),
+#                                    style=0)
+#                                    
+#        self.sndView.setTable(self.audio.table)
+        # END JR 31 mai 2017
         
         # cree un objet Surface pour le controle des parametres
         self.surface = Surface(self.panel, pos=(150,60), size=(GRID_WIDTH,GRID_HEIGHT), numSpeakers=self.numSpeakers)
         vars.setVars("Surface", self.surface) #JR 20 mai
 
 ##### SIZERS ######
-        # Start JR 31 mai 2017
+        # START JR 31 mai 2017
         surfaceSizer.Add(self.surface, 0, wx.ALL | wx.EXPAND, 5)
         
         radiusSizer.Add(self.radiusSliderText, 0, wx.ALL | wx.CENTER, 5)
@@ -131,13 +136,13 @@ class MyFrame(wx.Frame):
         upSizer.Add(surfaceSizer, 0, wx.ALL | wx.EXPAND, 5)
         upSizer.Add(self.meter, 0, wx.ALL | wx.EXPAND, 5)
                 
-        sndViewSizer.Add(self.sndView, 0, wx.LEFT | wx.EXPAND, 160)
+        sndViewSizer.Add(self.sndView, 0, wx.LEFT | wx.EXPAND, 155)
         
         frameSizer.Add(upSizer, 0, wx.ALL, 5)
-        frameSizer.Add(sndViewSizer, 0, wx.CENTER | wx.EXPAND, 5)
+        frameSizer.Add(sndViewSizer, 0, wx.ALL | wx.EXPAND, 5)
         
         self.panel.SetSizerAndFit(frameSizer)
-        # Een JR 31 mai 2017
+        # END JR 31 mai 2017
         
 ##### METHODES #####
 

@@ -48,6 +48,11 @@ class Audio():
     def changeSnd(self, snd):
         self.player.path = snd
         self.table.path = snd # JR 31 mai 2017
+        
+        # Marche pas......... JR 1 juin 2017
+#        waveform = vars.getVars("Waveform")
+#        waveform.setRange(0,self.table.getDur(False))
+        
     # mise à niveau des listes d'amplitude en lien avec les distances calculées dans SURFACE.
     def setBlueAmp(self,i,amp):
         blueAmp = BLUEAMPLIST[i]

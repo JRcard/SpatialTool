@@ -36,8 +36,9 @@ class MyFrame(wx.Frame):
         radiusSizer = wx.BoxSizer(wx.VERTICAL)
         volumeSizer = wx.BoxSizer(wx.VERTICAL)
         controlSizer = wx.BoxSizer(wx.VERTICAL)
+        waveform = wx.BoxSizer(wx.VERTICAL)
         upSizer = wx.BoxSizer(wx.HORIZONTAL)
-        sndViewSizer = wx.BoxSizer(wx.HORIZONTAL)
+        downSizer = wx.BoxSizer(wx.HORIZONTAL)
         # END JR 31 mai 2017
         
 ##### MENU #####
@@ -100,16 +101,19 @@ class MyFrame(wx.Frame):
 
         self.audio.registerMeter(self.meter)
         
-        # START JR 31 mai 2017
-        self.sndView = Waveform(self.panel, self.audio.table).createSndTable()
-#        
+        # START JR 1 juin 2017
+        self.waveform = Waveform(self.panel, self.audio.table)
+        vars.setVars("Waveform", self.waveform)
+        self.sndView = self.waveform.createSndTable()
+        self.timeSlider = self.waveform.createTimeSlider()
+        
 #        self.sndView = PyoGuiSndView(parent=self.panel,
 #                                    pos=(150, 680),
 #                                    size=(1200, 200),
 #                                    style=0)
 #                                    
 #        self.sndView.setTable(self.audio.table)
-        # END JR 31 mai 2017
+        # END JR 1 juin 2017
         
         # cree un objet Surface pour le controle des parametres
         self.surface = Surface(self.panel, pos=(150,60), size=(GRID_WIDTH,GRID_HEIGHT), numSpeakers=self.numSpeakers)
@@ -131,15 +135,18 @@ class MyFrame(wx.Frame):
         controlSizer.Add(buttonSizer, 0, wx.ALL | wx.CENTER, 5)
         controlSizer.Add(radiusSizer, 0, wx.ALL | wx.CENTER, 5)
         controlSizer.Add(volumeSizer, 0, wx.ALL | wx.CENTER, 5)
-        
+
+        waveform.Add(self.timeSlider, 0, wx.ALL | wx.EXPAND, 5)        
+        waveform.Add(self.sndView, 0, wx.ALL | wx.EXPAND, 5)
+#                
         upSizer.Add(controlSizer,0, wx.ALL | wx.EXPAND, 5)        
         upSizer.Add(surfaceSizer, 0, wx.ALL | wx.EXPAND, 5)
         upSizer.Add(self.meter, 0, wx.ALL | wx.EXPAND, 5)
-                
-        sndViewSizer.Add(self.sndView, 0, wx.LEFT | wx.EXPAND, 155)
         
-        frameSizer.Add(upSizer, 0, wx.ALL, 5)
-        frameSizer.Add(sndViewSizer, 0, wx.ALL | wx.EXPAND, 5)
+        downSizer.Add(waveform, 0, wx.ALL | wx.EXPAND, 5)        
+        
+        frameSizer.Add(upSizer, 0, wx.ALL | wx.EXPAND, 5)
+        frameSizer.Add(downSizer, 0, wx.ALL | wx.EXPAND, 5)
         
         self.panel.SetSizerAndFit(frameSizer)
         # END JR 31 mai 2017

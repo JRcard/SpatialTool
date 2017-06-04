@@ -12,6 +12,13 @@ class PrefDlg(wx.Dialog):
 
         sizer = wx.BoxSizer(wx.VERTICAL)
         self.outputs, self.outputIndexes, self.defaultOutput = self.getAvailableAudioOutputsDrivers()
+        
+        # Liste pour nombre de speakers (en fonction du max. de channels en output du premier driver audio)
+        self.chnlList = ["2"]
+        self.currentDriverMaxChannels = self.getMaxChnlsFromIndex(self.getOutputDriverIndexFromString(self.outputs[0]))
+        for i in range(self.currentDriverMaxChannels):
+            if i > 2:
+                self.chnlList.append(str(i))
 
         # Audio Driver Section
         boxAU = wx.BoxSizer(wx.HORIZONTAL)
@@ -30,26 +37,43 @@ class PrefDlg(wx.Dialog):
         self.radioNew = wx.RadioButton(self, -1, "Create new configuration", style=wx.RB_GROUP)
         sizer.Add(self.radioNew, 0, wx.ALIGN_CENTRE|wx.ALL, 5)
         
+        # Radio button de la section "Load". Il est créé ici afin de ne pas faire entrer les deux groupe de radio buttons en conflit.
+        self.radioOpen = wx.RadioButton(self, -1, "Open existing config.")
+        
         boxSP = wx.BoxSizer(wx.HORIZONTAL)
+        boxCH = wx.BoxSizer(wx.HORIZONTAL)
         boxOSC = wx.BoxSizer(wx.HORIZONTAL)
         
         self.numSpkLabel = wx.StaticText(self, -1, "Speakers Setup: ")
         self.numSpkChoices = wx.Choice(self, choices = SPEAKERS_SETUP_LIST)
+        self.numChnlsLabel = wx.StaticText(self, -1, "Number of speakers (Real): ")
+        self.radioSame = wx.RadioButton(self, -1, "Same as speaker setup", style=wx.RB_GROUP)
+        self.radioDiff = wx.RadioButton(self, -1, "Other: ")
+        self.chnls = wx.ComboBox(self, -1, self.chnlList[0], choices=self.chnlList, style=wx.CB_DROPDOWN)
         self.OSCPortLabel = wx.StaticText(self, -1, "OSC Input Port: ") 
         self.OSCPortText = wx.TextCtrl(self, -1, "5555", size=(80,20))
+        
         boxSP.Add(self.numSpkLabel, 0, wx.ALIGN_CENTRE|wx.ALL, 5)
         boxSP.Add(self.numSpkChoices, 1, wx.ALIGN_CENTRE|wx.ALL, 5)
+        boxCH.Add(self.numChnlsLabel, 0, wx.ALIGN_CENTRE|wx.ALL, 5)
+        boxCH.Add(self.radioSame, 0, wx.ALIGN_CENTRE|wx.ALL, 5)
+        boxCH.Add(self.radioDiff, 0, wx.ALIGN_CENTRE|wx.ALL, 5)
+        boxCH.Add(self.chnls, 0, wx.ALIGN_CENTRE|wx.ALL, 5)
         boxOSC.Add(self.OSCPortLabel, 0, wx.ALIGN_CENTRE|wx.ALL, 5)
         boxOSC.Add(self.OSCPortText, 1, wx.ALIGN_CENTRE|wx.ALL, 5)
         sizer.Add(boxSP, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5)
+        sizer.Add(boxCH, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5)
         sizer.Add(boxOSC, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5)
+        
+        self.radioSame.SetValue(1)
+        self.chnls.Enable(False)
         
         # Separator line
         line = wx.StaticLine(self, -1, size=(20,-1), style=wx.LI_HORIZONTAL)
         sizer.Add(line, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5)
           
         # Load Section
-        self.radioOpen = wx.RadioButton(self, -1, "Open existing config.")
+        # Le bouton radio self.radioOpen est créé dans la section "New config."
         sizer.Add(self.radioOpen, 0, wx.ALIGN_CENTRE|wx.ALL, 5)
         
         boxOpen = wx.BoxSizer(wx.HORIZONTAL)
@@ -76,6 +100,9 @@ class PrefDlg(wx.Dialog):
         # Binds
         self.Bind(wx.EVT_CLOSE, self.OnClose)
         self.chooseBtn.Bind(wx.EVT_BUTTON, self.chooseSessionFile)
+        self.radioSame.Bind(wx.EVT_RADIOBUTTON, self.onSameRadio)
+        self.radioDiff.Bind(wx.EVT_RADIOBUTTON, self.onDiffRadio)
+        self.au.Bind(wx.EVT_COMBOBOX, self.updateChnlsList)
 
     def OnClose(self, e):
         try:
@@ -83,7 +110,23 @@ class PrefDlg(wx.Dialog):
         except:
             pass
         raise SystemExit
+        
+    def onSameRadio(self, e):
+        self.chnls.Enable(False)
             
+    def onDiffRadio(self, e):
+        self.updateChnlsList(None)
+        self.chnls.Enable(True)
+        
+    def updateChnlsList(self, e):
+        self.chnls.Clear()
+        self.currentDriverMaxChannels = self.getMaxChnlsFromIndex(self.getOutputDriverIndexFromString(self.au.GetValue()))
+        for i in range(self.currentDriverMaxChannels):
+            if i >= 1:
+                self.chnlList.append(str(i+1))
+                self.chnls.Append(str(i+1))
+        self.chnls.SetSelection(0)
+
     def getAvailableAudioOutputsDrivers(self):
         outputDriverList, outputDriverIndexes = pa_get_output_devices()
         defaultOutputDriver = outputDriverList[outputDriverIndexes.index(pa_get_default_output())]
@@ -116,7 +159,10 @@ class PrefDlg(wx.Dialog):
         pref["AUDIO_DRIVER"] = self.au.GetValue()
 
         # Max output channels available on the selected driver
-        pref["NCHNLS"] = self.getMaxChnlsFromIndex(self.getOutputDriverIndexFromString(pref["AUDIO_DRIVER"]))
+        if self.radioSame.GetValue() == 1:
+            pref["NCHNLS"] = self.currentDriverMaxChannels
+        elif self.radioDiff.GetValue() == 1:
+            pref["NCHNLS"] = int(self.chnls.GetValue())
         
         # Speakers setup
         pref["SPEAKERS_SETUP"] = self.numSpkChoices.GetSelection()

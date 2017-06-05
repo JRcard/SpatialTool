@@ -19,8 +19,6 @@ TYPE = "A"
 
 # Liste pour le l'utilisateur
 SPEAKERS_SETUP_LIST = ["Stereo", "Quad", "Octo-Left-Right", "Octo-Front-Back"] # FL 26/05/17
-#SPEAKERS_SETUP_LIST = ["", "Stereo", "Quad", "Octo-Left-Right", "Octo-Front-Back"] # JR 23 mai 2017
-
 
 SETUP_STEREO = [(100, 100), (500, 100)]
 SETUP_QUAD = [(100, 100), (500, 100), (500,500), (100, 500)]
@@ -30,8 +28,8 @@ SETUP_OCTO_DIAMAND = [(100,100),(300,20),(500,100),(580,300),
 SETUP_OCTO_STEREO = [(175,50),(425,50),(550,175),(550,425),
                      (425,550),(175,550),(50,425),(50,175)]
 
-GRID_WIDTH = 600
-GRID_HEIGHT = 600
+GRID_WIDTH = 635
+GRID_HEIGHT = 635
 
 COLOR_BLUE = "#0C456F"
 COLOR_RED = "#DD3636"
@@ -40,10 +38,6 @@ COLOR_AR = "#888888"
 COLOR_GRID = "#555555"
 COLOR_BACK = "#000000"
 COLOR_MAIN = "#222222"
-
-# Distance entre le centre du speaker gauche et droit
-#DIAGONAL = math.sqrt(math.pow((78-78),2.) + math.pow((523-78),2.)) # JR 25 mai 2017
-
 
 # Dossier appartenant au programme. 
 TEMP_PATH = os.path.join(os.path.expanduser("~"), ".Spatial")

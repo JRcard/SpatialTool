@@ -104,6 +104,7 @@ class PrefDlg(wx.Dialog):
         self.radioDiff.Bind(wx.EVT_RADIOBUTTON, self.onDiffRadio)
         self.au.Bind(wx.EVT_COMBOBOX, self.updateChnlsList)
 
+
     def OnClose(self, e):
         try:
             self.Destroy()
@@ -150,7 +151,7 @@ class PrefDlg(wx.Dialog):
             self.path.SetValue(dlg.GetPath())
         dlg.Destroy()
         self.FitInside()  
-        
+       
     # Cette fonction permet aux préférences de se mettre à jour même si on ne les a pas changées dans la fenêtre de configuration initiale.
     def commitPrefs(self):
         pref = vars.getVars("Pref")
@@ -187,13 +188,6 @@ class PrefDlg(wx.Dialog):
         
 # ***********************************
 # JR 27 mai 2017
-# Je met ces fonctions ici pour le moment, ne sachant pas encore leur place optimum...
-
-    def onSave(self):
-            f = open(PREFERENCES, "w")
-            print f
-            f.write(str(pref))
-            f.close()
 
     def onOpen(self):
             f = open(PREFERENCES, "r")

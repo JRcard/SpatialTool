@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # encoding: utf-8
 import wx
 import math
@@ -33,25 +34,24 @@ class Surface(wx.Panel):
         self.s = False
         self.numSpeakers = numSpeakers # FL 29/05/17
 
-        # FL START 23/05/2017
         #OSC Variables
         self.incs = [0, 0, 0, 0]
-        # FL END 23/05/2017
 
         # Creation des cercles/sources
         self.blueCircle = Source(100, 100, CIRCLE_RADIUS) 
         self.redCircle = Source(500, 100, CIRCLE_RADIUS)
 
-        # Création des speakers
+
         speakers = []
         for i in range(self.numSpeakers):
             setup = vars.getVars("Speakers_setup")
             x, y = setup[i][0], setup[i][1]
             speakers.append(Speaker(x, y, SPEAKER_RADIUS))
         vars.setVars("Speakers", speakers)
-        print vars.getVars("Speakers")[0].c
 
-        
+#        print vars.getVars("Speakers")[0].c
+        self.speakerAdjusted() # FL 29/05/17
+      
         # méthode pour les controles
         self.Bind(wx.EVT_PAINT, self.onPaint)
         self.Bind(wx.EVT_LEFT_DOWN, self.onLeftDown)
@@ -62,7 +62,7 @@ class Surface(wx.Panel):
         self.Bind(wx.EVT_KEY_DOWN, self.onKeyDown)
         self.Bind(wx.EVT_KEY_UP, self.onKeyUp)
         
-        self.on_timer() #FL 23/05/2017
+        self.on_timer()
 
     def onKeyDown(self,e):
         key = e.GetKeyCode()
@@ -148,7 +148,8 @@ class Surface(wx.Panel):
             elif self.catchSpeaker:
                 self.currentSpeaker.x = self.pos[0]
                 self.currentSpeaker.y = self.pos[1]
-                self.distance(self.pos)
+#                self.distance(self.pos)
+                self.speakerAdjusted() # FL 29/05/17
 
             self.Refresh()
 
@@ -189,8 +190,6 @@ class Surface(wx.Panel):
         for i in range(8):
             dc.DrawCircle(300,300,CIRCLE_RADIUS*(7*i))
 
-#        pref = vars.getVars("Pref") # JR 25 mai 2017
-#        numSpk = pref["NUM_SPEAKERS"]
         for i in range(self.numSpeakers):
             vars.getVars("Speakers")[i].draw(dc, COLOR_AV)
             vars.getVars("Speakers")[i].drawZone(dc, COLOR_AV)
@@ -253,7 +252,7 @@ class Surface(wx.Panel):
                 self.currentSpeaker.x = initPos[spkIndex][0]
                 self.currentSpeaker.y = initPos[spkIndex][1]
                 break
-        
+        self.speakerAdjusted() # FL 29/05/17
 
     def clip(self,pos):
         w,h = self.GetSize()
@@ -270,9 +269,7 @@ class Surface(wx.Panel):
 
 ##### for each spk, getZone() calculer la distance de ce radius:
 
-    def distance(self,pos):
-#        pref = vars.getVars("Pref") # JR 25 mai 2017
-#        numSpk = pref["NUM_SPEAKERS"]        
+    def distance(self,pos):    
         for i in range(self.numSpeakers):
             SpkPos = vars.getVars("Speakers")[i].getCenter()
             SpkRad = vars.getVars("Speakers")[i].getZoneRad()
@@ -302,12 +299,12 @@ class Surface(wx.Panel):
         # Boule bleue (canal de gauche)
         if chnl == 0:
             if x != None:
-                if x < 0.47:
+                if x < 0.45:
                     if x < 0.25:
                         inc = -BIG_INC
                     else:
                         inc = -SMALL_INC
-                elif x > 0.53:
+                elif x > 0.55:
                     if x > 0.75:
                         inc = BIG_INC
                     else:
@@ -316,12 +313,12 @@ class Surface(wx.Panel):
                     inc = 0
                 self.incs[0] = inc
             if y != None:
-                if y < 0.47:
+                if y < 0.45:
                     if y < 0.25:
                         inc = -BIG_INC
                     else:
                         inc = -SMALL_INC
-                elif y > 0.53:
+                elif y > 0.55:
                     if y > 0.75:
                         inc = BIG_INC
                     else:
@@ -333,12 +330,12 @@ class Surface(wx.Panel):
         # Boule rouge (canal de droite)
         elif chnl == 1:
             if x != None:
-                if x < 0.47:
+                if x < 0.45:
                     if x < 0.25:
                         inc = -BIG_INC
                     else:
                         inc = -SMALL_INC
-                elif x > 0.53:
+                elif x > 0.55:
                     if x > 0.75:
                         inc = BIG_INC
                     else:
@@ -347,12 +344,12 @@ class Surface(wx.Panel):
                     inc = 0
                 self.incs[2] = inc
             if y != None:
-                if y < 0.47:
+                if y < 0.45:
                     if y < 0.25:
                         inc = -BIG_INC
                     else:
                         inc = -SMALL_INC
-                elif y > 0.53:
+                elif y > 0.55:
                     if y > 0.75:
                         inc = BIG_INC
                     else:
@@ -402,8 +399,20 @@ class Surface(wx.Panel):
             self.distance(newPos)
             
         self.Refresh()
-        wx.CallLater(50, self.on_timer)
+        wx.CallLater(40, self.on_timer)
     # FL END 23/05/2017
+    
+    # FL START 29/05/17
+    # Fonction qui ajuste les volumes quand on change les radius des speakers
+    def speakerAdjusted(self):
+        self.currentCircle = self.blueCircle
+        pos = [self.blueCircle.x, self.blueCircle.y]
+        self.distance(pos)
+        
+        self.currentCircle = self.redCircle
+        pos = [self.redCircle.x, self.redCircle.y]
+        self.distance(pos)
+    # FL START 29/05/17
         
     
 # formule pour la distance entre 2 points. 

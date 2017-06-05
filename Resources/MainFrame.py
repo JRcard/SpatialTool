@@ -48,6 +48,8 @@ class MyFrame(wx.Frame):
         
         # Put the "File" menu on the menu bar and put action in this menu           
         self.menu.Append(self.file, "&File")
+
+
         self.menuSave = self.file.Append(wx.ID_SAVE, "&Save\tCtrl+S", "Save preferences")
         self.file.AppendSeparator()
         self.menuExit = self.file.Append(wx.ID_EXIT, "E&xit", "Terminate the program")
@@ -55,6 +57,7 @@ class MyFrame(wx.Frame):
 
         self.Bind(wx.EVT_MENU, self.quit, self.menuExit)    
         self.Bind(wx.EVT_MENU, self.onSave, self.menuSave)
+
        
 ##### BOUTONS et GRAPHIQUES ##### 
 
@@ -198,9 +201,9 @@ class MyFrame(wx.Frame):
     def radiusZone(self,e):
         x = e.value
         speakers = vars.getVars("Speakers")
-        print str(len(speakers))
         for i in range(len(speakers)):
             speakers[i].setZoneRad(x)
+        self.surface.speakerAdjusted()
         self.surface.Refresh()
             
     def masterAmp(self,e):

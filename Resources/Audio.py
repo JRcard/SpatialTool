@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # encoding: utf-8
 import math
 from Constants import *
@@ -6,17 +7,22 @@ import Variables as vars
 
 savefile([[0,0,0,0],[0,0,0,0]], EMPTY_AUDIO_FILE, channels=2)
 
-
-
 class Audio():
-    def __init__(self, nchnls, numSpeakers): # FL 29/04/17
+    def __init__(self, driver, nchnls, numSpeakers): # FL 29/04/17
 
+        self.driver = driver
         self.nchnls = nchnls # FL 29/04/17
         self.numSpeakers = numSpeakers # FL 29/04/17
-
-        self.server = Server(sr=48000, nchnls=self.nchnls, buffersize=1024).boot()
-
+        
+#        pref = vars.getVars("Pref") FL 29/05/17
+#        self.server = Server(sr=44100, nchnls=self.nchnls, buffersize=512).boot() FL 29/05/17
+        self.server = Server(sr=44100, nchnls=self.nchnls, buffersize=512) #FL 29/05/17
+        self.server.setOutputDevice(self.driver) #FL 29/05/17
+        self.server.boot() # FL 29/05/17
+        time.sleep(1) # FL 29/05/17
+        
         self.table = SndTable(EMPTY_AUDIO_FILE) # JR 31 mai 2017
+
         
         # Player et canaux individuelles.
         self.player = SfPlayer(EMPTY_AUDIO_FILE, speed=1, loop=False, offset=0, interp=2, mul=1, add=0)
@@ -57,7 +63,6 @@ class Audio():
     def setBlueAmp(self,i,amp):
         blueAmp = BLUEAMPLIST[i]
         blueAmp.value = math.sqrt(amp)
-        #print "blue", blueAmp.value
 
     def setRedAmp(self,i,amp):
         redAmp = REDAMPLIST[i]

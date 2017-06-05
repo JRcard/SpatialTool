@@ -14,15 +14,34 @@ if __name__ == "__main__":
     dlg = PrefDlg()
     dlg.CenterOnScreen()
     val = dlg.ShowModal()
+    
     if val == wx.ID_OK:
-        dlg.commitPrefs()
-        audio = Audio(pref["NCHNLS"], pref["NUM_SPEAKERS"])
-        vars.setVars("Audio", audio)
-        oscServer = OSCServer()
-        vars.setVars("OSCServer", oscServer)
-        frame = MyFrame(numSpeakers=pref["NUM_SPEAKERS"])
-        vars.setVars("MainFrame", frame)
+
+        # Si on crée une nouvelle configuration
+        if dlg.radioNew.GetValue() == 1:
+            dlg.commitPrefs()
+            pref = vars.getVars("Pref") # FL 29/05/2017
+            
+            audioIndex = dlg.getOutputDriverIndexFromString(pref["AUDIO_DRIVER"])
+            audio = Audio(audioIndex, pref["NCHNLS"], pref["NUM_SPEAKERS"])
+            vars.setVars("Audio", audio)
+            
+            oscServer = OSCServer()
+            vars.setVars("OSCServer", oscServer)
+            
+            frame = MyFrame(numSpeakers=pref["NUM_SPEAKERS"])
+            vars.setVars("MainFrame", frame)
+            
+        # Si on ouvre une configuration existante (TO DO)
+        elif dlg.radioOpen.GetValue() == 1:
+            try:
+                dlg.Destroy()
+            except:
+                pass
+            raise SystemExit
+            
         frame.Maximize()
+
         frame.Show()
         app.MainLoop()
     else:

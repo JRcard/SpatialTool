@@ -9,6 +9,7 @@ vars["Surface"] = None
 vars["Audio"] = None
 vars["MainFrame"] = None
 vars["OSCServer"] = None
+vars["Waveform"] = None # JR 1 juin 2017
 vars["Speakers"] = []
 vars["Speakers_setup"] = [] # [(x, y), (x, y), ...]
 vars["Pref"] = {"AUDIO_DRIVER": "None", "NCHNLS": "2","SPEAKERS_SETUP": 0, "NUM_SPEAKERS": 2, "OSCPORT": "5555"} # FL 29/05/17

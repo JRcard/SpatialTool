@@ -16,6 +16,7 @@ if __name__ == "__main__":
     val = dlg.ShowModal()
     
     if val == wx.ID_OK:
+
         # Si on crée une nouvelle configuration
         if dlg.radioNew.GetValue() == 1:
             dlg.commitPrefs()
@@ -39,6 +40,8 @@ if __name__ == "__main__":
                 pass
             raise SystemExit
             
+        frame.Maximize()
+
         frame.Show()
         app.MainLoop()
     else:

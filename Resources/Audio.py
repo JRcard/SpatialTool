@@ -21,6 +21,9 @@ class Audio():
         self.server.boot() # FL 29/05/17
         time.sleep(1) # FL 29/05/17
         
+        self.table = SndTable(EMPTY_AUDIO_FILE) # JR 31 mai 2017
+
+        
         # Player et canaux individuelles.
         self.player = SfPlayer(EMPTY_AUDIO_FILE, speed=1, loop=False, offset=0, interp=2, mul=1, add=0)
         self.left = Sig(self.player[0])
@@ -29,7 +32,7 @@ class Audio():
         # Liste d'amplitude pour chaque canal d'entré relatif au nombre de canaux de sortie.
 #        numSpk = pref["NUM_SPEAKERS"] FL 29/05/17
         for i in range(self.numSpeakers): # FL 29/05/17
-            blueAmp = SigTo(value=0.0, time=0.1) # l'ajout d'un controle sur le Time serait bien
+            blueAmp = SigTo(value=0.0, time=0.1) 
             redAmp = SigTo(value=0.0, time=0.1)
             BLUEAMPLIST.append(blueAmp)
             REDAMPLIST.append(redAmp)
@@ -50,7 +53,12 @@ class Audio():
 
     def changeSnd(self, snd):
         self.player.path = snd
-
+        self.table.path = snd # JR 31 mai 2017
+        
+        # Marche pas......... JR 1 juin 2017
+#        waveform = vars.getVars("Waveform")
+#        waveform.setRange(0,self.table.getDur(False))
+        
     # mise à niveau des listes d'amplitude en lien avec les distances calculées dans SURFACE.
     def setBlueAmp(self,i,amp):
         blueAmp = BLUEAMPLIST[i]

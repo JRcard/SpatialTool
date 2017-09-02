@@ -41,19 +41,6 @@ class Surface(wx.Panel):
         self.blueCircle = Source(100, 100, CIRCLE_RADIUS) 
         self.redCircle = Source(500, 100, CIRCLE_RADIUS)
 
-# START JR 25 mai2017
-        # création des speakers
-#        if self.numSpeakers == 2:
-#            vars.setVars("Speakers_setup", SETUP_STEREO)
-#        elif self.numSpeakers == 4:
-#            vars.setVars("Speakers_setup", SETUP_QUAD)
-#        elif self.numSpeakers == 8 and TYPE == "A":
-#            vars.setVars("Speakers_setup", SETUP_OCTO_DIAMAND)
-#        elif self.numSpeakers == 8 and TYPE == "B":
-#            vars.setVars("Speakers_setup", SETUP_OCTO_STEREO)
-#        else:
-#            pass
-# END JR 25 mai 2017
 
         speakers = []
         for i in range(self.numSpeakers):
@@ -61,9 +48,10 @@ class Surface(wx.Panel):
             x, y = setup[i][0], setup[i][1]
             speakers.append(Speaker(x, y, SPEAKER_RADIUS))
         vars.setVars("Speakers", speakers)
+
 #        print vars.getVars("Speakers")[0].c
         self.speakerAdjusted() # FL 29/05/17
-        
+      
         # méthode pour les controles
         self.Bind(wx.EVT_PAINT, self.onPaint)
         self.Bind(wx.EVT_LEFT_DOWN, self.onLeftDown)
@@ -219,7 +207,7 @@ class Surface(wx.Panel):
         # Les cercles
         self.blueCircle.draw(dc,COLOR_BLUE)
         self.redCircle.draw(dc,COLOR_RED)
-
+        
 
     def onCircle(self,x,y):
         if self.redCircle.isInside(x,y):
@@ -280,7 +268,6 @@ class Surface(wx.Panel):
 
 
 ##### for each spk, getZone() calculer la distance de ce radius:
-    ##### p-e remplacer la diagonal ds l'équation.... a voir.
 
     def distance(self,pos):    
         for i in range(self.numSpeakers):
@@ -428,7 +415,6 @@ class Surface(wx.Panel):
     # FL START 29/05/17
         
     
-### formule pour la distance entre 2 points. pour calculer la distance 
-### entre le centre du cercle et le coin sup.Gauche du speaker: 
-    ### pour A(x1,y1) et B(x2,y2)
-### d(A,B) = math.sqrt(math.pow((x2-x1),2) + math.pow((y2-y1),2))
+# formule pour la distance entre 2 points. 
+# pour A(x1,y1) et B(x2,y2)
+# d(A,B) = math.sqrt(math.pow((x2-x1),2) + math.pow((y2-y1),2))

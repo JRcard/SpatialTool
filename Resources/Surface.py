@@ -18,12 +18,13 @@ import Variables as vars
 
 
 class Surface(wx.Panel):
-    def __init__(self, parent, pos, size, numSpeakers=2):
+    def __init__(self, parent, pos=(0,0), size=(100,100), numSpeakers=2):
         wx.Panel.__init__(self, parent, pos=pos, size=size)
         self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
 
         self.audio = vars.getVars("Audio")
         self.pos = None
+        self.size = size
         self.currentCircle = None
         self.currentSpeaker = None
         self.isAList = False
@@ -36,16 +37,18 @@ class Surface(wx.Panel):
 
         #OSC Variables
         self.incs = [0, 0, 0, 0]
+        self.absPos = [0, 0, 0, 0] # FL 04/09/2017
+        self.mode2 = False # FL 04/09/2017
 
         # Creation des cercles/sources
-        self.blueCircle = Source(100, 100, CIRCLE_RADIUS) 
-        self.redCircle = Source(500, 100, CIRCLE_RADIUS)
+        self.blueCircle = Source(self.size[0]*BLUE_START[0], self.size[1]*BLUE_START[1], CIRCLE_RADIUS) 
+        self.redCircle = Source(self.size[0]*RED_START[0], self.size[1]*RED_START[1], CIRCLE_RADIUS)
 
 
         speakers = []
         for i in range(self.numSpeakers):
             setup = vars.getVars("Speakers_setup")
-            x, y = setup[i][0], setup[i][1]
+            x, y = self.size[0]*setup[i][0], self.size[1]*setup[i][1] #FL 02/09/2017
             speakers.append(Speaker(x, y, SPEAKER_RADIUS))
         vars.setVars("Speakers", speakers)
 
@@ -118,7 +121,7 @@ class Surface(wx.Panel):
             self.onSpeaker(self.pos)
             
         elif self.catch:
-            print "catch!"
+            pass
 
         self.Refresh()
 
@@ -178,7 +181,7 @@ class Surface(wx.Panel):
         
         # Surface
         dc.SetBrush(wx.Brush(COLOR_BACK))
-        dc.DrawRectangle(0, 0, w, h)
+        dc.DrawRectangle(0, 0, w+1, h+1)
         
         # Le quadrillage
         dc.SetPen(wx.Pen(COLOR_GRID, 2))
@@ -188,7 +191,8 @@ class Surface(wx.Panel):
 
         dc.SetBrush(wx.Brush(COLOR_GRID,style=wx.TRANSPARENT))
         for i in range(8):
-            dc.DrawCircle(300,300,CIRCLE_RADIUS*(7*i))
+            dc.DrawCircle(w/2,h/2,GRID_CIRCLE_RADIUS*(7*i))
+#            dc.DrawCircle(300,300,CIRCLE_RADIUS*(7*i))
 
         for i in range(self.numSpeakers):
             vars.getVars("Speakers")[i].draw(dc, COLOR_AV)
@@ -213,13 +217,13 @@ class Surface(wx.Panel):
         if self.redCircle.isInside(x,y):
             self.currentCircle = self.redCircle
             self.catch = True
-            print "In red"
+#            print "In red"
             return True
 
         elif self.blueCircle.isInside(x,y):
             self.currentCircle = self.blueCircle
             self.catch = True
-            print "In blue"
+#            print "In blue"
             return True
 
         else: 
@@ -249,8 +253,8 @@ class Surface(wx.Panel):
             if i.isInside(pos):
                 self.currentSpeaker = i
                 spkIndex = spk.index(i)
-                self.currentSpeaker.x = initPos[spkIndex][0]
-                self.currentSpeaker.y = initPos[spkIndex][1]
+                self.currentSpeaker.x = initPos[spkIndex][0] * self.size[0] # FL 02/09/2017
+                self.currentSpeaker.y = initPos[spkIndex][1] * self.size[1] # FL 02/09/2017
                 break
         self.speakerAdjusted() # FL 29/05/17
 
@@ -275,7 +279,7 @@ class Surface(wx.Panel):
             SpkRad = vars.getVars("Speakers")[i].getZoneRad()
             dist = math.sqrt(math.pow((pos[0]-SpkPos[0]),2) + math.pow((pos[1]-SpkPos[1]),2))
             amp = max(0, 1. - dist / float(SpkRad))
-
+                
 
             if self.isAList:
                 self.audio.setBlueAmp(i,amp)
@@ -291,116 +295,140 @@ class Surface(wx.Panel):
     # Cette fonction est adaptée pour fonctionner avec une manette de PlayStation 3.
     # Le code devra probablement être ajusté si un autre type de controleur OSC est utilisé.
     def OSCMove(self, chnl, x=None, y=None):
-        global incs
+        global incs, absPos
         inc = 0
-        BIG_INC = 10
-        SMALL_INC = 5
+        BIG_INC = 40
+        SMALL_INC = 10
         
-        # Boule bleue (canal de gauche)
-        if chnl == 0:
-            if x != None:
-                if x < 0.45:
-                    if x < 0.25:
-                        inc = -BIG_INC
+        if self.mode2:
+            if chnl == 0:
+                if x != None:
+                    self.absPos[0] = x
+                if y != None:
+                    self.absPos[1] = y
+            if chnl == 1:
+                if x != None:
+                    self.absPos[2] = x
+                if y != None:
+                    self.absPos[3] = y
+        else:
+            # Boule bleue (canal de gauche)
+            if chnl == 0:
+                if x != None:
+                    if x < 0.45:
+                        if x < 0.001:
+                            inc = -BIG_INC
+                        else:
+                            inc = -SMALL_INC
+                    elif x > 0.55:
+                        if x > 0.999:
+                            inc = BIG_INC
+                        else:
+                            inc = SMALL_INC
+                    else: 
+                        inc = 0
+                    self.incs[0] = inc
+                if y != None:
+                    if y < 0.45:
+                        if y < 0.001:
+                            inc = -BIG_INC
+                        else:
+                            inc = -SMALL_INC
+                    elif y > 0.55:
+                        if y > 0.999:
+                            inc = BIG_INC
+                        else:
+                            inc = SMALL_INC
                     else:
-                        inc = -SMALL_INC
-                elif x > 0.55:
-                    if x > 0.75:
-                        inc = BIG_INC
+                        inc = 0
+                    self.incs[1] = inc
+                    
+            # Boule rouge (canal de droite)
+            elif chnl == 1:
+                if x != None:
+                    if x < 0.45:
+                        if x < 0.001:
+                            inc = -BIG_INC
+                        else:
+                            inc = -SMALL_INC
+                    elif x > 0.55:
+                        if x > 0.999:
+                            inc = BIG_INC
+                        else:
+                            inc = SMALL_INC
                     else:
-                        inc = SMALL_INC
-                else: 
-                    inc = 0
-                self.incs[0] = inc
-            if y != None:
-                if y < 0.45:
-                    if y < 0.25:
-                        inc = -BIG_INC
+                        inc = 0
+                    self.incs[2] = inc
+                if y != None:
+                    if y < 0.45:
+                        if y < 0.001:
+                            inc = -BIG_INC
+                        else:
+                            inc = -SMALL_INC
+                    elif y > 0.55:
+                        if y > 0.999:
+                            inc = BIG_INC
+                        else:
+                            inc = SMALL_INC
                     else:
-                        inc = -SMALL_INC
-                elif y > 0.55:
-                    if y > 0.75:
-                        inc = BIG_INC
-                    else:
-                        inc = SMALL_INC
-                else:
-                    inc = 0
-                self.incs[1] = inc
-                
-        # Boule rouge (canal de droite)
-        elif chnl == 1:
-            if x != None:
-                if x < 0.45:
-                    if x < 0.25:
-                        inc = -BIG_INC
-                    else:
-                        inc = -SMALL_INC
-                elif x > 0.55:
-                    if x > 0.75:
-                        inc = BIG_INC
-                    else:
-                        inc = SMALL_INC
-                else:
-                    inc = 0
-                self.incs[2] = inc
-            if y != None:
-                if y < 0.45:
-                    if y < 0.25:
-                        inc = -BIG_INC
-                    else:
-                        inc = -SMALL_INC
-                elif y > 0.55:
-                    if y > 0.75:
-                        inc = BIG_INC
-                    else:
-                        inc = SMALL_INC
-                else:
-                    inc = 0
-                self.incs[3] = inc
+                        inc = 0
+                    self.incs[3] = inc
         
     def on_timer(self):
-        w,h = self.GetSize()
+        w,h = self.size[0], self.size[1]
         oldPosBlue = [self.blueCircle.x, self.blueCircle.y]
         oldPosRed = [self.redCircle.x, self.redCircle.y]
+        changed = False
         
-        self.blueCircle.x += self.incs[0]
-        self.blueCircle.y += self.incs[1]
-        self.redCircle.x += self.incs[2]
-        self.redCircle.y += self.incs[3]
-        
-        if self.blueCircle.x < 0:
-            self.blueCircle.x = 0
-        elif self.blueCircle.x > w:
-            self.blueCircle.x = w
-           
-        if self.blueCircle.y < 0:
-            self.blueCircle.y = 0
-        elif self.blueCircle.y > h:
-            self.blueCircle.y = h
+        if self.mode2:
+            rate = 30
+            self.blueCircle.x = floatmap(self.absPos[0], 0, w)
+            self.blueCircle.y = floatmap(self.absPos[1], 0, h)
+            self.redCircle.x = floatmap(self.absPos[2], 0, w)
+            self.redCircle.y = floatmap(self.absPos[3], 0, h)
+        else:
+            rate = 40
+            self.blueCircle.x += self.incs[0]
+            self.blueCircle.y += self.incs[1]
+            self.redCircle.x += self.incs[2]
+            self.redCircle.y += self.incs[3]
             
-        if self.redCircle.x < 0:
-            self.redCircle.x = 0
-        elif self.redCircle.x > w:
-            self.redCircle.x = w
-           
-        if self.redCircle.y < 0:
-            self.redCircle.y = 0
-        elif self.redCircle.y > h:
-            self.redCircle.y = h
+            if self.blueCircle.x < 0:
+                self.blueCircle.x = 0
+            elif self.blueCircle.x > w:
+                self.blueCircle.x = w
+               
+            if self.blueCircle.y < 0:
+                self.blueCircle.y = 0
+            elif self.blueCircle.y > h:
+                self.blueCircle.y = h
+                
+            if self.redCircle.x < 0:
+                self.redCircle.x = 0
+            elif self.redCircle.x > w:
+                self.redCircle.x = w
+               
+            if self.redCircle.y < 0:
+                self.redCircle.y = 0
+            elif self.redCircle.y > h:
+                self.redCircle.y = h
 
         if oldPosBlue[0] != self.blueCircle.x or oldPosBlue[1] != self.blueCircle.y:
             self.currentCircle = self.blueCircle
             newPos = [self.blueCircle.x, self.blueCircle.y]
             self.distance(newPos)
+            changed = True
         
         if oldPosRed[0] != self.redCircle.x or oldPosRed[1] != self.redCircle.y:        
             self.currentCircle = self.redCircle
             newPos = [self.redCircle.x, self.redCircle.y]
             self.distance(newPos)
-            
-        self.Refresh()
-        wx.CallLater(40, self.on_timer)
-    # FL END 23/05/2017
+            changed = True
+                
+        if changed:
+            self.Refresh()
+        wx.CallLater(rate, self.on_timer)
+        # FL END 23/05/2017
     
     # FL START 29/05/17
     # Fonction qui ajuste les volumes quand on change les radius des speakers
@@ -414,6 +442,13 @@ class Surface(wx.Panel):
         self.distance(pos)
     # FL START 29/05/17
         
+    # FL START 04/09/2017
+    def modeChange(self):
+        if self.mode2:
+            self.mode2 = False
+        else:
+            self.mode2 = True
+    # FL END
     
 # formule pour la distance entre 2 points. 
 # pour A(x1,y1) et B(x2,y2)

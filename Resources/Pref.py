@@ -88,7 +88,6 @@ class PrefDlg(wx.Dialog):
         # Ok Button
         btnsizer = wx.StdDialogButtonSizer()
         okBtn = wx.Button(self, wx.ID_OK)
-        okBtn.SetDefault()
         btnsizer.AddButton(okBtn)
         btnsizer.Realize()
         sizer.Add(okBtn, 0, wx.ALIGN_CENTER|wx.ALL, 5)
@@ -103,7 +102,9 @@ class PrefDlg(wx.Dialog):
         self.radioSame.Bind(wx.EVT_RADIOBUTTON, self.onSameRadio)
         self.radioDiff.Bind(wx.EVT_RADIOBUTTON, self.onDiffRadio)
         self.au.Bind(wx.EVT_COMBOBOX, self.updateChnlsList)
+        self.numSpkChoices.Bind(wx.EVT_CHOICE, self.updateChnlsList)
 
+        okBtn.SetDefault()
 
     def OnClose(self, e):
         try:
@@ -121,9 +122,16 @@ class PrefDlg(wx.Dialog):
         
     def updateChnlsList(self, e):
         self.chnls.Clear()
+        sel = self.numSpkChoices.GetSelection()
+        if sel == 0:
+            maxSpks = 2
+        elif sel == 1:
+            maxSpks = 4
+        else:
+            maxSpks = 8
         self.currentDriverMaxChannels = self.getMaxChnlsFromIndex(self.getOutputDriverIndexFromString(self.au.GetValue()))
         for i in range(self.currentDriverMaxChannels):
-            if i >= 1:
+            if i >= 1 and i < maxSpks:
                 self.chnlList.append(str(i+1))
                 self.chnls.Append(str(i+1))
         self.chnls.SetSelection(0)
@@ -184,7 +192,7 @@ class PrefDlg(wx.Dialog):
             
         # OSC
         pref["OSCPORT"] = int(self.OSCPortText.GetValue())
-        print pref
+#        print pref 
         
 # ***********************************
 # JR 27 mai 2017

@@ -1,0 +1,7 @@
+TODO:
+
+- Permettre de charger une configuration sauvegardée
+- Ajout de fonctionnalités avec la manette de PS3 (modification du volume général, des rayons des speakers, randomisation des positions des sources, etc.)
+- Créer un manuel complet, recensant notamment les messages OSC acceptés par l'application
+- Ajout d'un mode miroir? (Boule rouge copie les mouvements de la boule bleue comme si un miroir vertical traversait la surface de haut en bas)
+- Corrections de bugs, corrections de bugs, corrections de bug...

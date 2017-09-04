@@ -42,7 +42,7 @@ class Speaker:
         self.x = x
         self.y = y
         self.c = c
-        self.radius = 25
+        self.radius = INIT_SOUND_RADIUS
         self.rect = wx.Rect(self.x-self.c,self.y-self.c,self.c*2,self.c*2)
 
     def draw(self,dc,color):
@@ -50,7 +50,7 @@ class Speaker:
         dc.SetPen(wx.Pen(COLOR_BACK, 1))
         dc.SetBrush(wx.Brush(color))
         dc.DrawCircle(self.x, self.y, self.c)
-        dc.DrawText("%d" % numero, self.x-5,self.y-6)
+        dc.DrawText("%d" % numero, self.x-(self.c/3),self.y-(self.c/1.75))
         
         self.rect.x = self.x - self.c
         self.rect.y = self.y - self.c

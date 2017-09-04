@@ -26,10 +26,12 @@ if __name__ == "__main__":
             audio = Audio(audioIndex, pref["NCHNLS"], pref["NUM_SPEAKERS"])
             vars.setVars("Audio", audio)
             
-            oscServer = OSCServer()
+            oscServer = OSCServer(pref["OSCPORT"])
             vars.setVars("OSCServer", oscServer)
             
-            frame = MyFrame(numSpeakers=pref["NUM_SPEAKERS"])
+            w, h = wx.GetDisplaySize() # FL 02/09/2017
+            frame = MyFrame(numSpeakers=pref["NUM_SPEAKERS"], size=(h, h))
+#            frame = MyFrame(numSpeakers=pref["NUM_SPEAKERS"])
             vars.setVars("MainFrame", frame)
             
         # Si on ouvre une configuration existante (TO DO)
@@ -40,7 +42,7 @@ if __name__ == "__main__":
                 pass
             raise SystemExit
             
-        frame.Maximize()
+#        frame.Maximize()
 
         frame.Show()
         app.MainLoop()

@@ -1,12 +1,12 @@
-#N canvas 830 23 542 347 10;
+#N canvas 2263 23 542 347 10;
 #X msg 114 83 print;
 #X obj 98 148 hid;
 #X msg 107 58 open 2;
-#X obj 63 42 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1
+#X obj 63 42 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1 1
 ;
 #X msg 366 229 connect 127.0.0.1 5555;
 #X msg 393 251 disconnect;
-#X obj 98 303 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X obj 98 303 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
 1;
 #N canvas 473 393 396 224 oscsend 0;
 #X msg 176 117 connect 127.0.0.1 5555;
@@ -22,13 +22,13 @@
 #X connect 5 0 3 0;
 #X restore 98 274 pd oscsend;
 #X msg 98 31 open 0x054c 0x0268;
-#N canvas 34 23 478 225 Sticks 0;
+#N canvas 1681 357 478 225 Sticks 0;
 #X obj 15 37 route abs;
 #X obj 15 61 route abs_x abs_y abs_z abs_rz;
-#X floatatom 15 87 5 0 0 0 - - -, f 5;
-#X floatatom 59 87 5 0 0 0 - - -, f 5;
-#X floatatom 147 87 5 0 0 0 - - -, f 5;
-#X floatatom 103 87 5 0 0 0 - - -, f 5;
+#X floatatom 15 87 5 0 0 0 - - -;
+#X floatatom 59 87 5 0 0 0 - - -;
+#X floatatom 147 87 5 0 0 0 - - -;
+#X floatatom 103 87 5 0 0 0 - - -;
 #X obj 15 115 / 255;
 #X obj 59 115 / 255;
 #X obj 103 115 / 255;
@@ -61,11 +61,11 @@
 #X connect 13 0 18 0;
 #X connect 14 0 0 0;
 #X restore 32 180 pd Sticks;
-#N canvas 36 339 420 193 Shoulders 0;
-#X floatatom 82 97 5 0 0 0 - - -, f 5;
-#X floatatom 127 97 5 0 0 0 - - -, f 5;
-#X floatatom 219 97 5 0 0 0 - - -, f 5;
-#X floatatom 173 97 5 0 0 0 - - -, f 5;
+#N canvas 1543 23 420 193 Shoulders 0;
+#X floatatom 82 97 5 0 0 0 - - -;
+#X floatatom 127 97 5 0 0 0 - - -;
+#X floatatom 219 97 5 0 0 0 - - -;
+#X floatatom 173 97 5 0 0 0 - - -;
 #X obj 81 13 inlet;
 #X obj 24 152 outlet;
 #X obj 127 152 outlet;
@@ -93,11 +93,11 @@
 #X connect 15 2 3 0;
 #X connect 15 3 2 0;
 #X restore 98 180 pd Shoulders;
-#N canvas 531 23 389 193 D_Pad 0;
-#X floatatom 62 97 5 0 0 0 - - -, f 5;
-#X floatatom 104 97 5 0 0 0 - - -, f 5;
-#X floatatom 190 97 5 0 0 0 - - -, f 5;
-#X floatatom 147 97 5 0 0 0 - - -, f 5;
+#N canvas 1540 245 389 193 D_Pad 0;
+#X floatatom 62 97 5 0 0 0 - - -;
+#X floatatom 104 97 5 0 0 0 - - -;
+#X floatatom 190 97 5 0 0 0 - - -;
+#X floatatom 147 97 5 0 0 0 - - -;
 #X obj 62 13 inlet;
 #X obj 11 152 outlet;
 #X obj 197 151 outlet;
@@ -125,11 +125,11 @@
 #X connect 12 0 6 0;
 #X connect 13 0 5 0;
 #X restore 181 180 pd D_Pad;
-#N canvas 491 352 410 187 key 0;
-#X floatatom 62 78 5 0 0 0 - - -, f 5;
-#X floatatom 110 78 5 0 0 0 - - -, f 5;
-#X floatatom 208 78 5 0 0 0 - - -, f 5;
-#X floatatom 159 78 5 0 0 0 - - -, f 5;
+#N canvas 1542 475 410 187 key 0;
+#X floatatom 62 78 5 0 0 0 - - -;
+#X floatatom 110 78 5 0 0 0 - - -;
+#X floatatom 208 78 5 0 0 0 - - -;
+#X floatatom 159 78 5 0 0 0 - - -;
 #X obj 62 -5 inlet;
 #X obj 9 142 outlet;
 #X obj 110 142 outlet;
@@ -163,11 +163,11 @@
 -1 -1;
 #X text 214 33 code vendor et product ID du PS3Controller;
 #X obj 63 78 t f f;
-#N canvas 490 329 425 179 extraKey 0;
-#X floatatom 71 83 5 0 0 0 - - -, f 5;
-#X floatatom 113 84 5 0 0 0 - - -, f 5;
-#X floatatom 199 83 5 0 0 0 - - -, f 5;
-#X floatatom 156 83 5 0 0 0 - - -, f 5;
+#N canvas 1967 472 425 179 extraKey 0;
+#X floatatom 71 83 5 0 0 0 - - -;
+#X floatatom 113 84 5 0 0 0 - - -;
+#X floatatom 199 83 5 0 0 0 - - -;
+#X floatatom 156 83 5 0 0 0 - - -;
 #X obj 71 -1 inlet;
 #X obj 10 135 outlet;
 #X obj 113 135 outlet;

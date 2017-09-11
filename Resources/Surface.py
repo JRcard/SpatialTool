@@ -449,6 +449,7 @@ class Surface(wx.Panel):
         else:
             self.mode2 = True
     # FL END
+  
     
 # formule pour la distance entre 2 points. 
 # pour A(x1,y1) et B(x2,y2)

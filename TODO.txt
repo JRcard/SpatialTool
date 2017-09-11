@@ -1,7 +1,30 @@
+To V.1
 TODO:
 
-- Permettre de charger une configuration sauvegardée
-- Ajout de fonctionnalités avec la manette de PS3 (modification du volume général, des rayons des speakers, randomisation des positions des sources, etc.)
+- Permettre de charger (load config file) une configuration (carte son, nbr de HP, etc) sauvegardée
+- Permettre de charger un template (load Template file) d’emplacement de HP et de position de départ.
+- Améliorer le positionnement des boules au départ en fonction du setup choisi.
+- Rendre le volume fidèle de sortie en fonction de l’emplacement exact de départ des boules sans qu’elles ne soient été touché.
+- Ajout de fonctionnalités minimums avec la manette de PS3 (modification du volume général, des rayons des speakers, randomisation des positions des sources, etc.)
 - Créer un manuel complet, recensant notamment les messages OSC acceptés par l'application
-- Ajout d'un mode miroir? (Boule rouge copie les mouvements de la boule bleue comme si un miroir vertical traversait la surface de haut en bas)
-- Corrections de bugs, corrections de bugs, corrections de bug...
+- Corrections de bugs, corrections de bugs, corrections de bugs…
+
+
+Because we can
+TODO:
+- Ajout de fonctionnalités ++ avec la manette de PS3 (voir: some fun ideas TODO)
+- Ajouter un moyen de customizer l’emplacement et le nombre de HP de façon moins rigide. (plus de HP possible (ex: 16, 22, 175!!) et disposition libre avant l’ouverture du mainframe).
+- Voir comment il serait possible de faire une application autonome (Logiciel standalone)
+- Connecter Python et PD ensemble pour démarrer la connection du OSC dans une version standalone.
+
+
+
+Some fun ideas
+TODO:
+- Ajout d'un mode miroir.(Boule rouge copie les mouvements de la boule bleue comme si un miroir vertical traversait la surface de haut en bas)
+- À l’aide d’une touche, fixer les sources sur un cercle donnant seulement la possibilité de de faire des ronds. Permettre le choix du cercle pour être plus ou moins près des HP
+- Fusionner les deux canaux ensemble pour ne contrôler qu’une boule
+- Code à la Mortal Combat. Ex.: up-up-left-right-down = Trajectoire en serpentin
+- A la place de sélect pour changer de mode, je suggère L1. Comme ça il est possible de déplacer les boules très rapidement et de les laisser en place en chantant de mode. 
+- R1 pourrait être une fonction de stand-by en mode relatif permettant l’apparition de boule fantôme pour déplacer les joystick à une position voulu sans affecter les boules et une fois en place il sera possible avec L1 « d’appeler » les boules en basculant en mode absolu.
+- Voir si un meilleur nom pourrait être trouvé… SpatiaLive, LiveSpat Controller, 

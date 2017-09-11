@@ -14,7 +14,7 @@ class OSCServer:
     def __init__(self, port=1000):
         self.port = port
         #Dictionnaire avec fonctions associées à chaque message OSC reçu.
-        self.bindings = {"/stickL/x": self.stickLeftXMove, "/stickL/y": self.stickLeftYMove, "/stickR/x": self.stickRightXMove, "/stickR/y": self.stickRightYMove, "/keyL1": self.onKeyL1, "/select": self.onSelectButton} # FL 04/09/17
+        self.bindings = {"/stickL/x": self.stickLeftXMove, "/stickL/y": self.stickLeftYMove, "/stickR/x": self.stickRightXMove, "/stickR/y": self.stickRightYMove, "/keyL1": self.onKeyL1, "/keySel": self.onSelectButton} # FL 04/09/17
         #Objet OscListener de Pyo permet de gérer l'OSC dans un thread indépendant de l'audio. On peut donc gérer l'OSC même si le moteur audio n'est pas démarré
         
         self.listen = OscListener(self._oscrecv, port)
@@ -54,7 +54,8 @@ class OSCServer:
     # FL START 04/09/2017
     def onSelectButton(self, data):
         surface = vars.getVars("Surface")
-        surface.modeChange()
+        if data % 2 == 1:   # JR 07/09/2017
+            surface.modeChange()
     #FL END
     
     #JR 27 mai 2017

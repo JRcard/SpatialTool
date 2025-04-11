@@ -1,3 +1,3 @@
 # SpatialTool
 
-Interface graphique en développement. Il servira à diffuser des pièces en stéréo dans des systèmes multiphoniques.
+Une application permettant la diffusion en direct de fichiers sonores dans des systèmes multiphoniques
